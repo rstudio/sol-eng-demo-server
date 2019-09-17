@@ -3,7 +3,7 @@ FROM ubuntu:bionic
 LABEL maintainer="sol-eng@rstudio.com"
 
 # Set versions and platforms
-ARG RSP_PLATFORM=trusty
+ARG RSP_PLATFORM=bionic
 ARG RSP_VERSION=1.2.1578-2
 ARG R_VERSION=3.6.1
 ARG PYTHON_VERSION=3.6.9
@@ -24,12 +24,15 @@ RUN apt-get update -y && \
     rrdtool \
     wget
 
-RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
-    mkdir -p /usr/lib/rstudio-server && \
-    tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
-    mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
-    rm -rf /usr/lib/rstudio-server/rsp-session* && \
-    rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
+RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz ; false; exit 0
+
+
+# && \
+#     mkdir -p /usr/lib/rstudio-server && \
+#     tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
+#     mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
+#     rm -rf /usr/lib/rstudio-server/rsp-session* && \
+#     rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
 
 EXPOSE 8788/tcp
 
@@ -53,14 +56,19 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
+COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
+COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
+
 RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R Demo (${R_VERSION} x86_64-pc-linux-gnu x86_64 linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
 # need to install packages from list of packages...
-RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("devtools", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-    /opt/R/${R_VERSION}/bin/R -e 'install.packages("tidyverse", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-    /opt/R/${R_VERSION}/bin/R -e 'install.packages("shiny", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-    /opt/R/${R_VERSION}/bin/R -e 'install.packages("rmarkdown", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")'
+RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\")"
+
+# RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("devtools", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
+#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("tidyverse", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
+#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("shiny", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
+#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("rmarkdown", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")'
 
 # Install Python --------------------------------------------------------------#
 
