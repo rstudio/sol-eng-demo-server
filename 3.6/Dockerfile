@@ -53,8 +53,10 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
-RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"));" >> \
+RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R Demo (${R_VERSION} x86_64-pc-linux-gnu x86_64 linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
+
+# need to install packages from list of packages...
 RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("devtools", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
     /opt/R/${R_VERSION}/bin/R -e 'install.packages("tidyverse", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
     /opt/R/${R_VERSION}/bin/R -e 'install.packages("shiny", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
