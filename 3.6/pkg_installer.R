@@ -1,22 +1,18 @@
-docker_pkg_install <- function(package_csv) {
+docker_pkg_install <- function(package_csv, install_loc) {
   pkgs <- read.csv(package_csv, stringsAsFactors = FALSE)
 
-  utils::install.packages("parallel")
+  print("INSTALLING PAK")
+  utils::install.packages("pak")
 
-  cores <- max(1, parallel::detectCores() - 1)
+  pak::pkg_install(pkgs$package, lib = install_loc)
+  # try_package <- function(package, ...) {
+  #   tryCatch({
+  #     pak::pkg_install(package, lib = install_loc)
+  #     return("Install Complete")
+  #   }, error = function(e) {
+  #     return(e)
+  #   })
+  # }
 
-  print("Trying on cores:")
-  print(cores)
-
-  try_package <- function(package, ...) {
-    tryCatch({
-      # TODO: Do we need a particular install library?
-      utils::install.packages(package, Ncpus = cores)
-      return("Install Complete")
-    }, error = function(e) {
-      return(e)
-    })
-  }
-
-  lapply(pkgs$package, try_package)
+  # lapply(pkgs$package, try_package)
 }

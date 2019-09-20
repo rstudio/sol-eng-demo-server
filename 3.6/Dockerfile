@@ -3,7 +3,7 @@ FROM ubuntu:bionic
 LABEL maintainer="sol-eng@rstudio.com"
 
 # Set versions and platforms
-ARG RSP_PLATFORM=bionic
+ARG RSP_PLATFORM=trusty
 ARG RSP_VERSION=1.2.1578-2
 ARG R_VERSION=3.6.1
 ARG PYTHON_VERSION=3.6.9
@@ -24,15 +24,12 @@ RUN apt-get update -y && \
     rrdtool \
     wget
 
-RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz ; false; exit 0
-
-
-# && \
-#     mkdir -p /usr/lib/rstudio-server && \
-#     tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
-#     mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
-#     rm -rf /usr/lib/rstudio-server/rsp-session* && \
-#     rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
+RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
+    mkdir -p /usr/lib/rstudio-server && \
+    tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
+    mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
+    rm -rf /usr/lib/rstudio-server/rsp-session* && \
+    rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
 
 EXPOSE 8788/tcp
 
@@ -43,8 +40,97 @@ RUN apt-get update -y && \
     git \
     libssl1.0.0 \
     libuser \
-    libxml2-dev \
-    subversion
+    libxml2-dev
+    # subversion \
+    # lmodern \
+    # bowtie2 \
+    # bwidget \
+    # cargo \
+    # cmake \
+    # coinor-libclp-dev \
+    # dcraw \
+    # gdal-bin \
+    # ggobi \
+    # git \
+    # haveged \
+    # imagej \
+    # imagemagick \
+    # jags \
+    # libapparmor-dev \
+    # libatk1.0-dev \
+    # libavfilter-dev \
+    # libcairo2-dev \
+    # libcurl4-openssl-dev \
+    # libfftw3-dev \
+    # libfreetype6-dev \
+    # libgdal-dev \
+    # libgeos-dev \
+    # libgit2-dev \
+    # libgl1-mesa-dev \
+    # libglib2.0-dev \
+    # libglu1-mesa-dev \
+    # libgmp3-dev \
+    # libgpgme11-dev \
+    # libgsl0-dev \
+    # libgtk2.0-dev \
+    # libhdf5-dev \
+    # libhiredis-dev \
+    # libimage-exiftool-perl \
+    # libjpeg-dev \
+    # libjq-dev \
+    # libleptonica-dev \
+    # libmagic-dev \
+    # libmagick++-dev \
+    # libmpfr-dev \
+    # libmysqlclient-dev \
+    # libnetcdf-dev \
+    # libopenmpi-dev \
+    # libpango1.0-dev \
+    # libpng-dev \
+    # libpoppler-cpp-dev \
+    # libpq-dev \
+    # libproj-dev \
+    # libprotobuf-dev \
+    # libqgis-dev \
+    # librdf0-dev \
+    # librrd-dev \
+    # librsvg2-dev \
+    # libsasl2-dev \
+    # libsecret-1-dev \
+    # libsndfile1-dev \
+    # libsodium-dev \
+    # libssh2-1-dev \
+    # libssl-dev \
+    # libtesseract-dev \
+    # libtiff-dev \
+    # libudunits2-dev \
+    # libv8-dev \
+    # libwebp-dev \
+    # libxft-dev \
+    # libxml2-dev \
+    # libxslt-dev \
+    # libzmq3-dev \
+    # make \
+    # nvidia-cuda-dev \
+    # ocl-icd-opencl-dev \
+    # openjdk-8-jdk \
+    # pari-gp \
+    # perl \
+    # protobuf-compiler \
+    # rustc \
+    # saga \
+    # saint \
+    # swftools \
+    # tcl \
+    # tesseract-ocr-eng \
+    # texlive \
+    # tk \
+    # tk-table \
+    # unixodbc-dev \
+    # wget \
+    # zlib1g-dev  \
+    # libfontconfig1-dev
+
 
 # Install R -------------------------------------------------------------------#
 
@@ -56,6 +142,8 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
+#RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
+
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
@@ -63,12 +151,7 @@ RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R D
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
 # need to install packages from list of packages...
-RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\")"
-
-# RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("devtools", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("tidyverse", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("shiny", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")' && \
-#     /opt/R/${R_VERSION}/bin/R -e 'install.packages("rmarkdown", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")'
+RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION}/lib/R/library\")"
 
 # Install Python --------------------------------------------------------------#
 
