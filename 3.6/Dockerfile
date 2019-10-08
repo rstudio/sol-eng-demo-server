@@ -4,11 +4,11 @@ LABEL maintainer="sol-eng@rstudio.com"
 
 # Set versions and platforms
 ARG RSP_PLATFORM=trusty
-ARG RSP_VERSION=1.2.1578-2
+ARG RSP_VERSION=1.2.5001-3
 ARG R_VERSION=3.6.1
 ARG PYTHON_VERSION=3.6.9
 ARG DRIVERS_VERSION=1.6.0
-ARG R_REPO=https://demo.rstudiopm.com/cran/__linux__/bionic/latest
+ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
 
 # Install RStudio Server Pro session components -------------------------------#
 
@@ -147,7 +147,7 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
-RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R Demo (${R_VERSION} x86_64-pc-linux-gnu x86_64 linux-gnu)\");" >> \
+RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
 # need to install packages from list of packages...
