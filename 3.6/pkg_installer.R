@@ -10,16 +10,4 @@ docker_pkg_install <- function(package_csv, install_loc) {
   options(Ncpus = ncores)
 
   utils::install.packages(pkgs$package, lib = install_loc)
-
-
-  # try_package <- function(package, ...) {
-  #   tryCatch({
-  #     pak::pkg_install(package, lib = install_loc)
-  #     return("Install Complete")
-  #   }, error = function(e) {
-  #     return(e)
-  #   })
-  # }
-
-  # lapply(pkgs$package, try_package)
 }

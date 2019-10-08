@@ -41,6 +41,7 @@ RUN apt-get update -y && \
     libssl1.0.0 \
     libuser \
     libxml2-dev
+    # these are other package system requirements, should uncomment and re-run
     # subversion \
     # lmodern \
     # bowtie2 \
@@ -142,6 +143,7 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
+# This line was causing problems...should probably uncomment.
 #RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
