@@ -38,99 +38,124 @@ EXPOSE 8788/tcp
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
-    libssl1.0.0 \
-    libuser \
-    libxml2-dev
+    libxml2-dev \
     # these are other package system requirements, should uncomment and re-run
-    # subversion \
-    # lmodern \
-    # bowtie2 \
-    # bwidget \
-    # cargo \
-    # cmake \
-    # coinor-libclp-dev \
-    # dcraw \
-    # gdal-bin \
-    # ggobi \
-    # git \
-    # haveged \
-    # imagej \
-    # imagemagick \
-    # jags \
-    # libapparmor-dev \
-    # libatk1.0-dev \
-    # libavfilter-dev \
-    # libcairo2-dev \
-    # libcurl4-openssl-dev \
-    # libfftw3-dev \
-    # libfreetype6-dev \
-    # libgdal-dev \
-    # libgeos-dev \
-    # libgit2-dev \
-    # libgl1-mesa-dev \
-    # libglib2.0-dev \
-    # libglu1-mesa-dev \
-    # libgmp3-dev \
-    # libgpgme11-dev \
-    # libgsl0-dev \
-    # libgtk2.0-dev \
-    # libhdf5-dev \
-    # libhiredis-dev \
-    # libimage-exiftool-perl \
-    # libjpeg-dev \
-    # libjq-dev \
-    # libleptonica-dev \
-    # libmagic-dev \
-    # libmagick++-dev \
-    # libmpfr-dev \
-    # libmysqlclient-dev \
-    # libnetcdf-dev \
-    # libopenmpi-dev \
-    # libpango1.0-dev \
-    # libpng-dev \
-    # libpoppler-cpp-dev \
-    # libpq-dev \
-    # libproj-dev \
-    # libprotobuf-dev \
-    # libqgis-dev \
-    # librdf0-dev \
-    # librrd-dev \
-    # librsvg2-dev \
-    # libsasl2-dev \
-    # libsecret-1-dev \
-    # libsndfile1-dev \
-    # libsodium-dev \
-    # libssh2-1-dev \
-    # libssl-dev \
-    # libtesseract-dev \
-    # libtiff-dev \
-    # libudunits2-dev \
-    # libv8-dev \
-    # libwebp-dev \
-    # libxft-dev \
-    # libxml2-dev \
-    # libxslt-dev \
-    # libzmq3-dev \
-    # make \
-    # nvidia-cuda-dev \
-    # ocl-icd-opencl-dev \
-    # openjdk-8-jdk \
-    # pari-gp \
-    # perl \
-    # protobuf-compiler \
-    # rustc \
-    # saga \
-    # saint \
-    # swftools \
-    # tcl \
-    # tesseract-ocr-eng \
-    # texlive \
-    # tk \
-    # tk-table \
-    # unixodbc-dev \
-    # wget \
-    # zlib1g-dev  \
-    # libfontconfig1-dev
+    subversion \
+    lmodern \
+    bowtie2 \
+    bwidget \
+    cargo \
+    cmake \
+    coinor-libclp-dev \
+    dcraw \
+    gdal-bin \
+    ggobi \
+    haveged \
+    imagej \
+    imagemagick \
+    jags \
+    libapparmor-dev \
+    libatk1.0-dev \
+    libavfilter-dev \
+    libcairo2-dev \
+    #libcurl4-openssl-dev \
+    libfftw3-dev \
+    libfreetype6-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libgit2-dev \
+    libgl1-mesa-dev \
+    libglib2.0-dev \
+    libglu1-mesa-dev \
+    libgmp3-dev \
+    libgpgme11-dev \
+    libgsl0-dev \
+    libgtk2.0-dev \
+    libhdf5-dev \
+    libhiredis-dev \
+    libimage-exiftool-perl \
+    libjpeg-dev \
+    libjq-dev \
+    libleptonica-dev \
+    libmagic-dev \
+    libmagick++-dev \
+    libmpfr-dev \
+    libmysqlclient-dev \
+    libnetcdf-dev \
+    libopenmpi-dev \
+    libpango1.0-dev \
+    libpng-dev \
+    libpoppler-cpp-dev \
+    libpq-dev \
+    libproj-dev \
+    libprotobuf-dev \
+    libqgis-dev \
+    libraptor2-dev \
+    librasqal3-dev \
+    librdf0-dev \
+    librrd-dev \
+    librsvg2-dev \
+    libsasl2-dev \
+    libsecret-1-dev \
+    libsndfile1-dev \
+    libsodium-dev \
+    libssh2-1-dev \
+    libssl-dev \
+    libtesseract-dev \
+    libtiff-dev \
+    libudunits2-dev \
+    libv8-dev \
+    libwebp-dev \
+    libxft-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libzmq3-dev \
+    make \
+    nvidia-cuda-dev \
+    ocl-icd-opencl-dev \
+    openjdk-8-jdk \
+    pari-gp \
+    perl \
+    protobuf-compiler \
+    rustc \
+    saga \
+    saint \
+    swftools \
+    tcl \
+    tesseract-ocr-eng \
+    texlive \
+    tk \
+    tk-table \
+    unixodbc-dev \
+    wget \
+    zlib1g-dev  \
+    libfontconfig1-dev
+
+# Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
+# RUN apt-get update -y && \
+#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+#     apt-transport-https \
+#     gnupg \
+#     lsb-release
+
+# RUN wget -O /usr/share/keyrings/apache-arrow-keyring.gpg https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-keyring.gpg
+# # RUN tee /etc/apt/sources.list.d/apache-arrow.list <<APT_LINE \
+# #     deb [arch=amd64 signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
+# #     deb-src [signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
+# #     APT_LINE
+
+
+# RUN apt-get update -y && \
+#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+#     libarrow-dev \
+#     libarrow-glib-dev \
+#     libarrow-flight-dev \
+#     libplasma-dev \
+#     libplasma-glib-dev \
+#     libgandiva-dev \
+#     libgandiva-glib-dev \
+#     libparquet-dev \
+#     libparquet-glib-dev
 
 
 # Install R -------------------------------------------------------------------#
@@ -144,7 +169,7 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 # Install R packages ----------------------------------------------------------#
 
 # This line was causing problems...should probably uncomment.
-#RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
+RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
