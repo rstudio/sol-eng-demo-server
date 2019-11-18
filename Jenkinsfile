@@ -32,6 +32,16 @@ node('docker') {
           checkout scm
           RSPVersion = readFile("rsp-version.txt").trim()
         }
+        withAWS(role: 'build', roleAccount: '075258722956') {
+            pullBuildPush(
+              image_name: 'sol-eng-demo-server',
+              image_tag: "${RSPVersion}-3.6",
+              latest_tag: false,
+              cache_tag: 'latest',
+              dockerfile: './3.6/Dockerfile',
+              registry_url: 'https://075258722956.dkr.ecr.us-east-2.amazonaws.com'
+            )
+        }
       }
     }
 }
@@ -49,16 +59,6 @@ node('docker') {
 //    //stage('build images') {
 //    //  agent { label 'docker' }
 //    //  steps {
-//    //    //withAWS(role: 'build', roleAccount: '954555569365') {
-//    //    //    pullBuildPush(
-//    //    //      image_name: 'lucid-auth-saml',
-//    //    //      image_tag: image_tag,
-//    //    //      latest_tag: true,
-//    //    //      cache_tag: 'latest',
-//    //    //      dockerfile: './Dockerfile',
-//    //    //      registry_url: 'https://954555569365.dkr.ecr.us-east-1.amazonaws.com'
-//    //    //    )
-//    //    //}
 //    //  }
 //    //}
 //  }
