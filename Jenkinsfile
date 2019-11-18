@@ -35,8 +35,9 @@ pipeline {
   }
   stages {
     stage('setup') {
-      steps {
-      RSPVersion = readFile("rsp-version.txt").trim()
+      node('docker') {
+            checkout scm
+            RSPVersion = readFile("rsp-version.txt").trim()
       }
     }
     //stage('build images') {
