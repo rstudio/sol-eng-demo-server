@@ -26,8 +26,14 @@ def buildImage(def imageKind, def dockerContext) {
 }
 
 node('docker') {
-      checkout scm
-      RSPVersion = readFile("rsp-version.txt").trim()
+    timestamps {
+      ansiColor('xterm') {
+        stage('setup') {
+          checkout scm
+          RSPVersion = readFile("rsp-version.txt").trim()
+        }
+      }
+    }
 }
 //pipeline {
 //  agent none
