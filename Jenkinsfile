@@ -8,8 +8,7 @@ def buildImageTag(imageKind) {
 
 // buildImage hides most of the pullBuildPush details from callers.
 //
-// imageKind is "kind" of Docker image (usually OS distribution).
-//
+// imageKind is "kind" of Docker image (usually OS distribution).  //
 // dockerContext is the path to the directory to use as the Docker context
 // when building the image. This must be the directory containing the
 // Dockerfile to build.
@@ -38,8 +37,11 @@ node('docker') {
                 image_name: 'sol-eng-demo-server',
                 image_tag: "${RSPVersion}-3.6",
                 latest_tag: false,
-                cache_tag: 'latest',
+                docker_context: './3.6',
                 dockerfile: './3.6/Dockerfile',
+                build_args: "RSP_VERSION=${RSPVersion}"
+                build_arg_jenkins_uid: 'JENKINS_UID',
+                build_arg_jenkins_gid: 'JENKINS_GID',
                 registry_url: 'https://075258722956.dkr.ecr.us-east-2.amazonaws.com'
               )
           }
@@ -47,21 +49,3 @@ node('docker') {
       }
     }
 }
-//pipeline {
-//  agent none
-//  environment {
-//    HOME = "."
-//  }
-//  options {
-//    ansiColor('xterm')
-//  }
-//  stages {
-//    stage('setup') {
-//    }
-//    //stage('build images') {
-//    //  agent { label 'docker' }
-//    //  steps {
-//    //  }
-//    //}
-//  }
-//}
