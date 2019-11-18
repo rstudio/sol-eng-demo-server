@@ -25,35 +25,35 @@ def buildImage(def imageKind, def dockerContext) {
     return image
 }
 
-pipeline {
-  agent none
-  environment {
-    HOME = "."
-  }
-  options {
-    ansiColor('xterm')
-  }
-  stages {
-    stage('setup') {
-      node('docker') {
-            checkout scm
-            RSPVersion = readFile("rsp-version.txt").trim()
-      }
-    }
-    //stage('build images') {
-    //  agent { label 'docker' }
-    //  steps {
-    //    //withAWS(role: 'build', roleAccount: '954555569365') {
-    //    //    pullBuildPush(
-    //    //      image_name: 'lucid-auth-saml',
-    //    //      image_tag: image_tag,
-    //    //      latest_tag: true,
-    //    //      cache_tag: 'latest',
-    //    //      dockerfile: './Dockerfile',
-    //    //      registry_url: 'https://954555569365.dkr.ecr.us-east-1.amazonaws.com'
-    //    //    )
-    //    //}
-    //  }
-    //}
-  }
+node('docker') {
+      checkout scm
+      RSPVersion = readFile("rsp-version.txt").trim()
 }
+//pipeline {
+//  agent none
+//  environment {
+//    HOME = "."
+//  }
+//  options {
+//    ansiColor('xterm')
+//  }
+//  stages {
+//    stage('setup') {
+//    }
+//    //stage('build images') {
+//    //  agent { label 'docker' }
+//    //  steps {
+//    //    //withAWS(role: 'build', roleAccount: '954555569365') {
+//    //    //    pullBuildPush(
+//    //    //      image_name: 'lucid-auth-saml',
+//    //    //      image_tag: image_tag,
+//    //    //      latest_tag: true,
+//    //    //      cache_tag: 'latest',
+//    //    //      dockerfile: './Dockerfile',
+//    //    //      registry_url: 'https://954555569365.dkr.ecr.us-east-1.amazonaws.com'
+//    //    //    )
+//    //    //}
+//    //  }
+//    //}
+//  }
+//}
