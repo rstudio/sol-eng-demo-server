@@ -12,18 +12,18 @@ ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
 
 # Install RStudio Server Pro session components -------------------------------#
 
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
-    gdebi \
-    libcurl4-gnutls-dev \
-    libssl1.0.0 \
-    libssl-dev \
-    libuser \
-    libuser1-dev \
-    rrdtool \
-    wget
-
+#RUN apt-get update -y && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+#    curl \
+#    gdebi \
+#    libcurl4-gnutls-dev \
+#    libssl1.0.0 \
+#    libssl-dev \
+#    libuser \
+#    libuser1-dev \
+#    rrdtool \
+#    wget
+#
 #RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
 #    mkdir -p /usr/lib/rstudio-server && \
 #    tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
