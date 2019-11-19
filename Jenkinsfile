@@ -20,8 +20,8 @@ def buildRRepo(def tag='latest') {
 // buildImage hides most of the pullBuildPush details from callers.
 def buildImage(def rspVersion, def rVersion, def rRepo=buildRRepo(), def latest=false) {
     def minorRVersion = minorVersion(rVersion)
-    print "Building R version ${rVersion}"
-    print "Building R minor version ${minorRVersion}"
+    print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
+    print "Using R Repository: ${rRepo}"
     def image = withAWS(role: 'build', roleAccount: '075258722956') {
         pullBuildPush(
           image_name: 'sol-eng-demo-server',
@@ -44,6 +44,7 @@ node('docker') {
         stage('setup') {
           checkout scm
           RSPVersion = readFile("rsp-version.txt").trim()
+          print "Building RSP version: ${RSPVersion}"
         }
         stage('build') {
 	  parallel '3.6': {
