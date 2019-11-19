@@ -1,25 +1,35 @@
 #!groovy
 
-// buildImageTag takes the kind of Docker image (usually OS distribution)
-//
-def buildImageTag(imageKind) {
-    return "${imageKind}-${RSPVersion}"
+// ideas for future data-driven approach
+// https://stackoverflow.com/questions/42770775/how-to-define-and-iterate-over-map-in-jenkinsfile
+
+// versionPattern captures MAJOR.MINOR.SUBMINOR and ignores follow-on characters
+def versionPattern = ~/^(\d+)\.(\d+)\.(\d+).*$/
+
+def minorVersion(def version) {
+  def val = version.replaceFirst(versionPattern) {
+    "${it[1]}.${it[2]}"
+  }
+  return val
+}
+
+def buildRRepo(def tag='latest') {
+  return "https://demo.rstudiopm.com/all/__linux__/bionic/${tag}"
 }
 
 // buildImage hides most of the pullBuildPush details from callers.
-//
-// imageKind is "kind" of Docker image (usually OS distribution).  //
-// dockerContext is the path to the directory to use as the Docker context
-// when building the image. This must be the directory containing the
-// Dockerfile to build.
-def buildImage(def rspVersion, def rVersion) {
+def buildImage(def rspVersion, def rVersion, def rRepo=buildRRepo(), def latest=false) {
+    def minorRVersion = minorVersion(rVersion)
+    print "Building R version ${rVersion}"
+    print "Building R minor version ${minorRVersion}"
     def image = withAWS(role: 'build', roleAccount: '075258722956') {
         pullBuildPush(
           image_name: 'sol-eng-demo-server',
-          image_tag: "${rspVersion}-${rVersion}",
-          latest_tag: false,
-          dockerfile: "./${rVersion}/Dockerfile",
-          build_args: "--build-arg RSP_VERSION=${rspVersion}",
+          image_tag: "${rspVersion}-${minorRVersion}",
+          cache_tag: 'latest',
+          latest_tag: latest,
+          dockerfile: "./${minorRVersion}/Dockerfile",
+          build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
@@ -37,7 +47,7 @@ node('docker') {
         }
         stage('build') {
 	  parallel '3.6': {
-	    buildImage(RSPVersion, '3.6')
+	    buildImage(RSPVersion, '3.6.1', rRepo=buildRRepo(), latest = true)
 	  }
         }
       }
