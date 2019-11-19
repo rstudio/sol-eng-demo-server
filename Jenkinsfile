@@ -39,7 +39,7 @@ node('docker') {
                 latest_tag: false,
                 docker_context: './3.6',
                 dockerfile: './3.6/Dockerfile',
-                build_args: "RSP_VERSION=${RSPVersion}"
+                build_args: "RSP_VERSION=${RSPVersion}",
                 build_arg_jenkins_uid: 'JENKINS_UID',
                 build_arg_jenkins_gid: 'JENKINS_GID',
                 registry_url: 'https://075258722956.dkr.ecr.us-east-2.amazonaws.com'
