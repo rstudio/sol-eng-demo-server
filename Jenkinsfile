@@ -3,10 +3,10 @@
 // ideas for future data-driven approach
 // https://stackoverflow.com/questions/42770775/how-to-define-and-iterate-over-map-in-jenkinsfile
 
-// versionPattern captures MAJOR.MINOR.SUBMINOR and ignores follow-on characters
-def versionPattern = ~/^(\d+)\.(\d+)\.(\d+).*$/
+def minorVersion(def version) {
+  // versionPattern captures MAJOR.MINOR.SUBMINOR and ignores follow-on characters
+  def versionPattern = ~/^(\d+)\.(\d+)\.(\d+).*$/
 
-def minorVersion(def version, def versionPattern = versionPattern) {
   def val = version.replaceFirst(versionPattern) {
     "${it[1]}.${it[2]}"
   }
