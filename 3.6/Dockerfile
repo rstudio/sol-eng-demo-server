@@ -66,6 +66,7 @@ RUN apt-get update -y && \
     libgit2-dev \
     libgl1-mesa-dev \
     libglib2.0-dev \
+    libglpk-dev \
     libglu1-mesa-dev \
     libgmp3-dev \
     libgpgme11-dev \
@@ -73,6 +74,7 @@ RUN apt-get update -y && \
     libgtk2.0-dev \
     libhdf5-dev \
     libhiredis-dev \
+    libicu-dev \
     libimage-exiftool-perl \
     libjpeg-dev \
     libjq-dev \
