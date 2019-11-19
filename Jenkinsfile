@@ -6,7 +6,7 @@
 // versionPattern captures MAJOR.MINOR.SUBMINOR and ignores follow-on characters
 def versionPattern = ~/^(\d+)\.(\d+)\.(\d+).*$/
 
-def minorVersion(def version) {
+def minorVersion(def version, def versionPattern = versionPattern) {
   def val = version.replaceFirst(versionPattern) {
     "${it[1]}.${it[2]}"
   }
