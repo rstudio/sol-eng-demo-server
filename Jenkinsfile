@@ -42,7 +42,7 @@ node('docker') {
                 build_args: "RSP_VERSION=${RSPVersion}",
                 build_arg_jenkins_uid: 'JENKINS_UID',
                 build_arg_jenkins_gid: 'JENKINS_GID',
-                registry_url: 'https://075258722956.dkr.ecr.us-east-2.amazonaws.com'
+                registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
               )
           }
         }
