@@ -37,7 +37,6 @@ node('docker') {
                 image_name: 'sol-eng-demo-server',
                 image_tag: "${RSPVersion}-3.6",
                 latest_tag: false,
-                docker_context: './3.6',
                 dockerfile: './3.6/Dockerfile',
                 build_args: "RSP_VERSION=${RSPVersion}",
                 build_arg_jenkins_uid: 'JENKINS_UID',
