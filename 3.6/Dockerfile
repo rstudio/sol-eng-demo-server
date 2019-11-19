@@ -168,7 +168,6 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
-# This line was causing problems...should probably uncomment.
 RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
