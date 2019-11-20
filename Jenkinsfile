@@ -50,7 +50,11 @@ node('docker') {
     stage('build') {
       parallel '3.6': {
         buildImage(RSPVersion, '3.6.1', buildRRepo('latest'), true)
-      }
+      },
+      '3.5': {
+        buildImage(RSPVersion, '3.5.3', buildRRepo('1408'), true)
+      },
+
     }
   }
 }
