@@ -44,9 +44,11 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
 
 ansiColor('xterm') {
   stage('setup') {
-    checkout scm
-    RSPVersion = readFile("rsp-version.txt").trim()
-    print "Building RSP version: ${RSPVersion}"
+    node('docker') {
+      checkout scm
+      RSPVersion = readFile("rsp-version.txt").trim()
+      print "Building RSP version: ${RSPVersion}"
+    }
   }
   stage('build') {
       parallel '3.6': {
