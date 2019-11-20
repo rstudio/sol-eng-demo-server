@@ -27,6 +27,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
     node('docker') {
+    checkout scm
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
