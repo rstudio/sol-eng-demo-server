@@ -13,8 +13,8 @@ def minorVersion(def version) {
   return val
 }
 
-String buildRRepo(def tag='latest') {
-  def value = "https://demo.rstudiopm.com/all/__linux__/bionic/${tag}"
+String buildRRepo(def pointer='latest') {
+  def value = "https://demo.rstudiopm.com/all/__linux__/bionic/" + pointer
   return value
 }
 
@@ -46,7 +46,7 @@ node('docker') {
     }
     stage('build') {
       parallel '3.6': {
-        buildImage(RSPVersion, '3.6.1', rRepo = buildRRepo('latest'), latest = true)
+        buildImage(RSPVersion, '3.6.1', buildRRepo('latest'), true)
       }
     }
   }
