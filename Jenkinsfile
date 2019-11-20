@@ -14,11 +14,12 @@ def minorVersion(def version) {
 }
 
 def buildRRepo(def tag='latest') {
-  return "https://demo.rstudiopm.com/all/__linux__/bionic/${tag}"
+  def value = "https://demo.rstudiopm.com/all/__linux__/bionic/${tag}"
+  return value
 }
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def rspVersion, def rVersion, def rRepo=buildRRepo(), def latest=false) {
+def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
@@ -45,7 +46,7 @@ node('docker') {
     }
     stage('build') {
       parallel '3.6': {
-        buildImage(RSPVersion, '3.6.1', rRepo=buildRRepo(), latest = true)
+        buildImage(RSPVersion, '3.6.1', rRepo = buildRRepo('latest'), latest = true)
       }
     }
   }
