@@ -3,6 +3,9 @@
 // ideas for future data-driven approach
 // https://stackoverflow.com/questions/42770775/how-to-define-and-iterate-over-map-in-jenkinsfile
 
+// NOTE: Named parameters _is_ a thing
+// http://docs.groovy-lang.org/latest/html/documentation/#_named_parameters
+
 def minorVersion(def version) {
   // versionPattern captures MAJOR.MINOR.SUBMINOR and ignores follow-on characters
   def versionPattern = ~/^(\d+)\.(\d+)\.(\d+).*$/
