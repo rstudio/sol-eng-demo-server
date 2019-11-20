@@ -47,17 +47,19 @@ node('docker') {
       RSPVersion = readFile("rsp-version.txt").trim()
       print "Building RSP version: ${RSPVersion}"
     }
-    stage('build-3.6') {
-      buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
-    }
-    stage('build-3.5') {
+    stage('build') {
+      parallel '3.6': {
+        buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
+      },
+      '3.5': {
         buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-    }
-    stage('build-3.4') {
-      buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-    }
-    stage('build-3.3') {
-      buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
+      },
+      '3.4': {
+        buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+      },
+      '3.3': {
+        buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
+      }
     }
   }
 }
