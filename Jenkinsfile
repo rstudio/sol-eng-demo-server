@@ -51,17 +51,17 @@ ansiColor('xterm') {
     }
   }
   stage('build') {
-      parallel '3.6': {
-        buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
-      },
-      '3.5': {
-        buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-      }
-    //'3.4': {
-    //  buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-    //},
-    //'3.3': {
-    //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
-    //}
+    parallel '3.6': {
+      buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
+    },
+    '3.5': {
+      buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
+    },
+    '3.4': {
+      buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+    },
+    '3.3': {
+      buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
+    }
   }
 }
