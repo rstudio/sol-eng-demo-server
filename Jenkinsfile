@@ -13,7 +13,7 @@ def minorVersion(def version) {
   return val
 }
 
-def buildRRepo(def tag='latest') {
+String buildRRepo(def tag='latest') {
   def value = "https://demo.rstudiopm.com/all/__linux__/bionic/${tag}"
   return value
 }
