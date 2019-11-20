@@ -31,7 +31,6 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
-          cache_tag: 'latest',
           latest_tag: latest,
           dockerfile: "./3.6/Dockerfile",
           build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
