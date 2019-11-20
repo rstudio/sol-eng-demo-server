@@ -22,8 +22,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo=buildRRepo(), def latest=
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
-    def image = withAWS(role: 'build', roleAccount: '075258722956') {
-        pullBuildPush(
+    def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
           cache_tag: 'latest',
@@ -34,23 +33,20 @@ def buildImage(def rspVersion, def rVersion, def rRepo=buildRRepo(), def latest=
           build_arg_jenkins_gid: 'JENKINS_GID',
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
         )
-    }
     return image
 }
 
 node('docker') {
-    timestamps {
-      ansiColor('xterm') {
-        stage('setup') {
-          checkout scm
-          RSPVersion = readFile("rsp-version.txt").trim()
-          print "Building RSP version: ${RSPVersion}"
-        }
-        stage('build') {
-	  parallel '3.6': {
-	    buildImage(RSPVersion, '3.6.1', rRepo=buildRRepo(), latest = true)
-	  }
-        }
+  ansiColor('xterm') {
+    stage('setup') {
+      checkout scm
+      RSPVersion = readFile("rsp-version.txt").trim()
+      print "Building RSP version: ${RSPVersion}"
+    }
+    stage('build') {
+      parallel '3.6': {
+        buildImage(RSPVersion, '3.6.1', rRepo=buildRRepo(), latest = true)
       }
     }
+  }
 }
