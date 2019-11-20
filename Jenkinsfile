@@ -26,6 +26,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
+    node('docker') {
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
@@ -37,29 +38,28 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
           build_arg_jenkins_gid: 'JENKINS_GID',
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
         )
+    }
     return image
 }
 
-node('docker') {
-  ansiColor('xterm') {
-    stage('setup') {
-      checkout scm
-      RSPVersion = readFile("rsp-version.txt").trim()
-      print "Building RSP version: ${RSPVersion}"
-    }
-    stage('build') {
+ansiColor('xterm') {
+  stage('setup') {
+    checkout scm
+    RSPVersion = readFile("rsp-version.txt").trim()
+    print "Building RSP version: ${RSPVersion}"
+  }
+  stage('build') {
       parallel '3.6': {
         buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
+      },
+      '3.5': {
+        buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
       }
-      //'3.5': {
-      //  buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-      //},
-      //'3.4': {
-      //  buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-      //},
-      //'3.3': {
-      //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
-      //}
-    }
+    //'3.4': {
+    //  buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+    //},
+    //'3.3': {
+    //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
+    //}
   }
 }
