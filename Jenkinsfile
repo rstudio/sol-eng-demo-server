@@ -53,8 +53,7 @@ node('docker') {
       },
       '3.5': {
         buildImage(RSPVersion, '3.5.3', buildRRepo('1408'), true)
-      },
-
+      }
     }
   }
 }
