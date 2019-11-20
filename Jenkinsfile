@@ -31,7 +31,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
           image_tag: "${rspVersion}-${minorRVersion}",
           cache_tag: 'latest',
           latest_tag: latest,
-          dockerfile: "./${minorRVersion}/Dockerfile",
+          dockerfile: "./3.6/Dockerfile",
           build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
@@ -49,10 +49,16 @@ node('docker') {
     }
     stage('build') {
       parallel '3.6': {
-        buildImage(RSPVersion, '3.6.1', buildRRepo('latest'), true)
+        buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
       },
       '3.5': {
-        buildImage(RSPVersion, '3.5.3', buildRRepo('1408'), true)
+        buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
+      },
+      '3.4': {
+        buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+      },
+      '3.3': {
+        buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
       }
     }
   }
