@@ -5,7 +5,7 @@ docker_pkg_install <- function(package_csv, install_loc) {
   ncores <- max(1, future::availableCores() - 1)
 
   print(sprintf("Installing on %s cores", ncores))
-  options(Ncpus = ncores)
+  options(Ncpus = 1)
 
   utils::install.packages(pkgs$package, lib = install_loc)
 }
