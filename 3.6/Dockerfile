@@ -171,6 +171,7 @@ COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
 ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
+ARG R_REPO_LATEST='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
 RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
@@ -239,7 +240,8 @@ ARG DRIVERS_VERSION=1.6.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb
 
-RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("odbc", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")'
+# install latest versions of important IDE packages
+RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages(c("odbc", "rsconnect", "rstudioapi"), repos="${R_REPO_LATEST}")'
 
 # Locale configuration --------------------------------------------------------#
 
