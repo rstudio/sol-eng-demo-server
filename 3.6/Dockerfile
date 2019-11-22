@@ -2,14 +2,6 @@ FROM ubuntu:bionic
 
 LABEL maintainer="sol-eng@rstudio.com"
 
-# Set versions and platforms
-ARG RSP_PLATFORM=trusty
-ARG RSP_VERSION=1.2.5001-3
-ARG R_VERSION=3.6.1
-ARG PYTHON_VERSION=3.6.9
-ARG DRIVERS_VERSION=1.6.0
-ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
-
 # Install RStudio Server Pro session components -------------------------------#
 
 RUN apt-get update -y && \
@@ -24,6 +16,8 @@ RUN apt-get update -y && \
     rrdtool \
     wget
 
+ARG RSP_PLATFORM=trusty
+ARG RSP_VERSION=1.2.5001-3
 RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
     mkdir -p /usr/lib/rstudio-server && \
     tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
@@ -66,6 +60,7 @@ RUN apt-get update -y && \
     libgit2-dev \
     libgl1-mesa-dev \
     libglib2.0-dev \
+    libglpk-dev \
     libglu1-mesa-dev \
     libgmp3-dev \
     libgpgme11-dev \
@@ -73,6 +68,7 @@ RUN apt-get update -y && \
     libgtk2.0-dev \
     libhdf5-dev \
     libhiredis-dev \
+    libicu-dev \
     libimage-exiftool-perl \
     libjpeg-dev \
     libjq-dev \
@@ -160,6 +156,7 @@ RUN apt-get update -y && \
 
 # Install R -------------------------------------------------------------------#
 
+ARG R_VERSION=3.6.1
 RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION}_1_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive r-${R_VERSION}_1_amd64.deb
 
@@ -168,12 +165,13 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
-# This line was causing problems...should probably uncomment.
 RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
+ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
+ARG R_REPO_LATEST='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
 RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
@@ -182,6 +180,7 @@ RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer
 
 # Install Python --------------------------------------------------------------#
 
+ARG PYTHON_VERSION=3.6.9
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
@@ -237,10 +236,12 @@ RUN /opt/python/${PYTHON_VERSION}/bin/pip install \
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi
 
+ARG DRIVERS_VERSION=1.6.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb
 
-RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages("odbc", repos="https://demo.rstudiopm.com/cran/__linux__/bionic/latest")'
+# install latest versions of important IDE packages
+RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 
 # Locale configuration --------------------------------------------------------#
 
