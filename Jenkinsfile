@@ -69,4 +69,9 @@ ansiColor('xterm') {
       buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
     }
   }
+  stage('finish') {
+    node('docker') {
+      print "Finished pipeline"
+    }
+  }
 }
