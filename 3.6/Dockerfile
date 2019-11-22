@@ -241,7 +241,7 @@ RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRI
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb
 
 # install latest versions of important IDE packages
-RUN /opt/R/${R_VERSION}/bin/R -e 'install.packages(c("odbc", "rsconnect", "rstudioapi"), repos="${R_REPO_LATEST}")'
+RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 
 # Locale configuration --------------------------------------------------------#
 
