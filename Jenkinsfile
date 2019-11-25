@@ -65,12 +65,12 @@ ansiColor('xterm') {
       buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
       //buildImage(RSPVersion, '3.4.4', buildRRepo('51', 'cran', 'cluster'))
       print "Finished 3.4"
-    },
-    '3.3': {
-      buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
-      //buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
-      print "Finished 3.3"
     }
+    //'3.3': {
+    //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
+    //  //buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
+    //  print "Finished 3.3"
+    //}
   }
   stage('finish') {
     node('docker') {
