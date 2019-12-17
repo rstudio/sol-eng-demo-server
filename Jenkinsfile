@@ -21,6 +21,9 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
   return value
 }
 
+# only push images from master
+pushImage = (env.BRANCH_NAME == 'master')
+
 // buildImage hides most of the pullBuildPush details from callers.
 def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def minorRVersion = minorVersion(rVersion)
@@ -31,13 +34,15 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
-	  //cache_tag: 'none',
+          // can use this to invalidate the cache if needed
+	  // cache_tag: 'none',
           latest_tag: latest,
           dockerfile: "./Dockerfile",
           build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
-          registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
+          registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+	  push: pushImage
         )
     }
 }
