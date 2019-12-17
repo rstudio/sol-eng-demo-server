@@ -178,6 +178,30 @@ RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/$
 # need to install packages from list of packages...
 RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION}/lib/R/library\")"
 
+# Install jupyter -------------------------------------------------------------#
+
+ARG JUPYTER_VERSION=3.6.9
+RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/jupyter && \
+    /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
+    rm -rf Miniconda3-latest-Linux-x86_64.sh && \
+    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
+    /opt/python/jupyter/bin/pip uninstall -y ipykernel
+
+# Install Jupyter Notebook and RSP/RSC Notebook Extensions --------------------#
+
+RUN /opt/python/jupyter/bin/pip install \
+    jupyter \
+    jupyterlab \
+    rsp_jupyter \
+    rsconnect_jupyter
+
+RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
+    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
+    /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
+
 # Install Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION=3.6.9
@@ -185,23 +209,10 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.s
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
-    rm -rf Miniconda3-latest-Linux-x86_64.sh
+    rm -rf Miniconda3-latest-Linux-x86_64.sh && \
+    /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
-
-# Install Jupyter Notebook and RSP/RSC Notebook Extensions --------------------#
-
-RUN /opt/python/${PYTHON_VERSION}/bin/pip install \
-    jupyter \
-    jupyterlab \
-    rsp_jupyter \
-    rsconnect_jupyter
-
-RUN /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
-    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
-    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/${PYTHON_VERSION}/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
 
 # Install Python packages -----------------------------------------------------#
 
