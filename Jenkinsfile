@@ -33,7 +33,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
           image_tag: "${rspVersion}-${minorRVersion}",
 	  //cache_tag: 'none',
           latest_tag: latest,
-          dockerfile: "./3.6/Dockerfile",
+          dockerfile: "./Dockerfile",
           build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
