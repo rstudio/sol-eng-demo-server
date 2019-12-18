@@ -21,7 +21,7 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
   return value
 }
 
-# only push images from master
+// only push images from master
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
