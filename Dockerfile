@@ -185,16 +185,15 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.s
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/jupyter && \
     /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
     rm -rf Miniconda3-latest-Linux-x86_64.sh && \
-    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
-    /opt/python/jupyter/bin/pip uninstall -y ipykernel
-
-# Install Jupyter Notebook and RSP/RSC Notebook Extensions --------------------#
-
-RUN /opt/python/jupyter/bin/pip install \
+    /opt/python/jupyter/bin/pip install \
     jupyter \
     jupyterlab \
     rsp_jupyter \
-    rsconnect_jupyter
+    rsconnect_jupyter && \
+    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
+    /opt/python/jupyter/bin/pip uninstall -y ipykernel
+
+# Install RSP/RSC Notebook Extensions --------------------#
 
 RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
     /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
