@@ -204,19 +204,16 @@ RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_ju
 # Install Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION=3.6.9
+COPY ./requirements.txt /opt/python/${PYTHON_VERSION}/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
+    /opt/python/${PYTHON_VERSION}/bin/pip install -r /opt/python/${PYTHON_VERSION}/requirements.txt && \
     rm -rf Miniconda3-latest-Linux-x86_64.sh && \
     /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
-
-# Install Python packages -----------------------------------------------------#
-
-COPY ./requirements.txt /opt/python/${PYTHON_VERSION}/requirements.txt
-RUN /opt/python/${PYTHON_VERSION}/bin/pip install -r /opt/python/${PYTHON_VERSION}/requirements.txt
 
 # Install RStudio Professional Drivers ----------------------------------------#
 
