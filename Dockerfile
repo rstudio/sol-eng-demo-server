@@ -183,7 +183,6 @@ RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer
 ARG JUPYTER_VERSION=3.6.9
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/jupyter && \
-    /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
     rm -rf Miniconda3-latest-Linux-x86_64.sh && \
     /opt/python/jupyter/bin/pip install \
     jupyter \
