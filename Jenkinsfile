@@ -44,6 +44,18 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
 	  push: pushImage
         )
+    def imageName = image.imageName()
+    sh """
+    # See https://github.com/aelsabbahy/goss/releases for release versions
+    curl -L https://github.com/aelsabbahy/goss/releases/download/v0.3.8/goss-linux-amd64 -o /usr/local/bin/goss
+    chmod +rx /usr/local/bin/goss
+
+    # (optional) dgoss docker wrapper (use 'master' for latest version)
+    curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o /usr/local/bin/dgoss
+    chmod +rx /usr/local/bin/dgoss
+
+    GOSS_VARS=goss_vars.yaml dgoss run -it ${imageName}
+    """
     return image
     }
 }
