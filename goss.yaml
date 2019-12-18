@@ -9,7 +9,7 @@ file:
     contains: []
 
 # test all R versions and packages
-{{ $rvers := mkSlice "/opt/R/3.6.1/bin/R"}}
+{{ $rvers := mkSlice "/opt/R/{{ .Env.R_VERSION }}/bin/R"}}
 {{ $pkgs := .Vars.packages}}
 command:
   # loops the library command for each R version to ensure expected libraries exist for all.
