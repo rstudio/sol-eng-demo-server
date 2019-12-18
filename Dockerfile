@@ -216,31 +216,8 @@ ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 
 # Install Python packages -----------------------------------------------------#
 
-RUN /opt/python/${PYTHON_VERSION}/bin/pip install \
-    altair \
-    beautifulsoup4 \
-    cloudpickle \
-    cython \
-    dask \
-    gensim \
-    keras \
-    matplotlib \
-    nltk \
-    numpy \
-    pandas \
-    pillow \
-    pyarrow \
-    requests \
-    scipy \
-    scikit-image \
-    scikit-learn \
-    scrapy \
-    seaborn \
-    spacy \
-    sqlalchemy \
-    statsmodels \
-    tensorflow \
-    xgboost
+COPY ./requirements.txt /opt/python/${PYTHON_VERSION}/requirements.txt
+RUN /opt/python/${PYTHON_VERSION}/bin/pip install -r /opt/python/${PYTHON_VERSION}/requirements.txt
 
 # Install RStudio Professional Drivers ----------------------------------------#
 
