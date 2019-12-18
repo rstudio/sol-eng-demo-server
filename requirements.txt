@@ -5,6 +5,7 @@ cloudpickle
 cython
 dask
 gensim
+ipykernel
 keras
 matplotlib
 nltk
@@ -14,6 +15,7 @@ pillow
 plotly
 pyarrow
 requests
+rsconnect_jupyter
 scikit-image
 scikit-learn
 scipy
