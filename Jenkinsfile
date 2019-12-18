@@ -44,6 +44,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
 	  push: pushImage
         )
+    return image
     }
 }
 
@@ -57,18 +58,15 @@ ansiColor('xterm') {
   }
   stage('build') {
     parallel '3.6': {
-      buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
-      //buildImage(RSPVersion, '3.6.1', buildRRepo('688', 'cran', 'cluster'), true)
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
       print "Finished 3.6"
     },
     '3.5': {
-      buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-      //buildImage(RSPVersion, '3.5.3', buildRRepo('624', 'cran', 'cluster'))
+      def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
       print "Finished 3.5"
     },
     '3.4': {
-      buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-      //buildImage(RSPVersion, '3.4.4', buildRRepo('51', 'cran', 'cluster'))
+      def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
       print "Finished 3.4"
     }
     //'3.3': {
