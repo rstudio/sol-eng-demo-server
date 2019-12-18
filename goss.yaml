@@ -1,0 +1,24 @@
+file:
+  /opt/rstudio-drivers/:
+    exists: true
+    filetype: directory
+    contains: []
+  /usr/lib/rstudio-server/bin/rsession:
+    exists: true
+    filetype: file
+    contains: []
+
+# test all R versions and packages
+{{ $rvers := mkSlice "/opt/R/3.6.1/bin/R"}}
+{{ $pkgs := .Vars.packages}}
+command:
+  # loops the library command for each R version to ensure expected libraries exist for all.
+  # notably, it also ensures that each expected R version exists and is runnable
+  {{range $rver := $rvers }}
+  {{$rver}} --slave -e 'library()' | cut -f 1 -d ' ' | grep -v '^Packages$' | grep -v '^$':
+    exit-status: 0
+    stdout:
+      {{range $pkg := $pkgs}}
+      - {{ $pkg }}
+      {{end}}
+  {{end}}
