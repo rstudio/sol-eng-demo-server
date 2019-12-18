@@ -1,5 +1,6 @@
 altair
 beautifulsoup4
+bokeh
 cloudpickle
 cython
 dask
@@ -10,11 +11,12 @@ nltk
 numpy
 pandas
 pillow
+plotly
 pyarrow
 requests
-scipy
 scikit-image
 scikit-learn
+scipy
 scrapy
 seaborn
 spacy
