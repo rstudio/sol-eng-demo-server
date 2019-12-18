@@ -54,7 +54,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o ./dgoss
     chmod +rx ./dgoss
 
-    GOSS_VARS=goss_vars.yaml GOSS_PATH=./goss ./dgoss run -it ${imageName}
+    GOSS_VARS=goss_vars.yaml GOSS_PATH=./goss ./dgoss run -it -e R_VERSION=${rVersion} ${imageName}
     """
     return image
     }
