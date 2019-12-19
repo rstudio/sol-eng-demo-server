@@ -21,6 +21,9 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
   return value
 }
 
+// only push images from master
+pushImage = (env.BRANCH_NAME == 'master')
+
 // buildImage hides most of the pullBuildPush details from callers.
 def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def minorRVersion = minorVersion(rVersion)
@@ -31,14 +34,29 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
           image_tag: "${rspVersion}-${minorRVersion}",
-	  //cache_tag: 'none',
+          // can use this to invalidate the cache if needed
+	  // cache_tag: 'none',
           latest_tag: latest,
-          dockerfile: "./3.6/Dockerfile",
+          dockerfile: "./Dockerfile",
           build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
-          registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com'
+          registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+	  push: pushImage
         )
+    def imageName = image.imageName()
+    sh """
+    # See https://github.com/aelsabbahy/goss/releases for release versions
+    curl -L https://github.com/aelsabbahy/goss/releases/download/v0.3.8/goss-linux-amd64 -o ./goss
+    chmod +rx ./goss
+
+    # (optional) dgoss docker wrapper (use 'master' for latest version)
+    curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o ./dgoss
+    chmod +rx ./dgoss
+
+    GOSS_VARS=goss_vars.yaml GOSS_PATH=./goss ./dgoss run -it -e R_VERSION=${rVersion} ${imageName}
+    """
+    return image
     }
 }
 
@@ -52,18 +70,15 @@ ansiColor('xterm') {
   }
   stage('build') {
     parallel '3.6': {
-      buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
-      //buildImage(RSPVersion, '3.6.1', buildRRepo('688', 'cran', 'cluster'), true)
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
       print "Finished 3.6"
     },
     '3.5': {
-      buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-      //buildImage(RSPVersion, '3.5.3', buildRRepo('624', 'cran', 'cluster'))
+      def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
       print "Finished 3.5"
     },
     '3.4': {
-      buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-      //buildImage(RSPVersion, '3.4.4', buildRRepo('51', 'cran', 'cluster'))
+      def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
       print "Finished 3.4"
     }
     //'3.3': {
