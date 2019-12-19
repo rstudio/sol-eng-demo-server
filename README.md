@@ -1,8 +1,17 @@
 This repository contains Docker assets for the Solutions Engineering Demo
 server (lovingly known as "Colorado").
 
-You can find the images on Docker Hub:
-[rstudio/sol-eng-demo-server](https://hub.docker.com/r/rstudio/sol-eng-demo-server)
+## Getting Started
+
+Because these images are stored in AWS ECR, they are _not_ easily accessible on
+DockerHub.
+
+Rather, you need to know how to:
+
+- [Authenticate to AWS
+  ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registries.html#registry_auth)
+- [Access AWS ECR
+  Registries](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registries.html)
 
 ## Disclaimers
 
