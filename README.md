@@ -25,3 +25,24 @@ following resources:
   which these resources are based on
 - [The docker-r-session-complete images](https://hub.docker.com/r/rstudio/r-session-complete)
 - [An overview of the job launcher](https://solutions.rstudio.com/launcher/overview/)
+
+# Dev Workflow
+
+## Build Pipeline
+
+- All branches / PRs are built on Jenkins
+- Only `master` pushes to the ECR repository
+
+## Run tests locally
+
+- Install [`dgoss`](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss)
+- Run `make test` 
+- To edit tests interactively run `make edit`
+- **NOTE**: this requires that you have built (or pulled) the images locally
+
+## Excluding Packages
+
+Some packages are ok to fail... and we have more failures for older R versions...
+- Add packages that are OK failing to `pkg_failing.txt`
+- Run `make vars` to regenerate the `goss_vars.yaml`
+- Ultimately, we need to take some additional passes at these to find out why they are failing
