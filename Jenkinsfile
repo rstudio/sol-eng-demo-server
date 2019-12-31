@@ -25,20 +25,61 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false) {
+def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
     node('docker') {
     checkout scm
+
+    if (!args) {
+      // create dummy map so lookups do not fail
+      args = [dummy: true]
+    }
+
+    // alt args
+    def altArgs = ''
+    if (args.rVersionAlt) {
+      altArgs = "${altArgs} --build-arg R_VERSION_ALT=${args.rVersionAlt}"
+    }
+    if (args.pyVersion) {
+      altArgs = "${altArgs} --build-arg PYTHON_VERSION=${args.pyVersion}"
+    }
+    if (args.pyVersionAlt) {
+      altArgs = "${altArgs} --build-arg PYTHON_VERSION_ALT=${args.pyVersionAlt}"
+    }
+    if (args.rRepoAlt) {
+      altArgs = "${altArgs} --build-arg R_REPO_ALT=${args.rRepoAlt}"
+    }
+    print "Using Alternate Arguments: ${altArgs}"
+
+    if (!args.tag) {
+      tag = "${rspVersion}-${minorRVersion}"
+    } else {
+      tag = args.tag
+    }
+    print "Building tag: ${tag}"
+
+    if (!args.dockerfile) {
+      dockerfile = './Dockerfile'
+    } else {
+      dockerfile = args.dockerfile
+    }
+
+    if (!args.latest) {
+      latest = false
+    } else {
+      latest = args.latest
+    }
+
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
-          image_tag: "${rspVersion}-${minorRVersion}",
+          image_tag: tag,
           // can use this to invalidate the cache if needed
 	  // cache_tag: 'none',
           latest_tag: latest,
-          dockerfile: "./Dockerfile",
-          build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo}",
+          dockerfile: dockerfile,
+          build_args: "--build-arg RSP_VERSION=${rspVersion} --build-arg R_VERSION=${rVersion} --build-arg R_REPO=${rRepo} ${altArgs}",
           build_arg_jenkins_uid: 'JENKINS_UID',
           build_arg_jenkins_gid: 'JENKINS_GID',
           registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
@@ -70,7 +111,7 @@ ansiColor('xterm') {
   }
   stage('build') {
     parallel '3.6': {
-      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
       print "Finished 3.6"
     },
     '3.5': {
@@ -80,6 +121,10 @@ ansiColor('xterm') {
     '3.4': {
       def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
       print "Finished 3.4"
+    },
+    '201912': {
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-201912")
+      print "Finished 201912"
     }
     //'3.3': {
     //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
