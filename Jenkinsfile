@@ -46,7 +46,7 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def do
     if (rRepoAlt) {
       altArgs = "${altArgs} --build-arg R_REPO_ALT=${rRepoAlt}"
     }
-    print "Using Alternate Arguments: ${altArgs}
+    print "Using Alternate Arguments: ${altArgs}"
 
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
