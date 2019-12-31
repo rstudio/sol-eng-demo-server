@@ -25,7 +25,7 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def dockerfile='./Dockerfile', def rVersionAlt=null, def pyVersion=null, def pyVersionAlt=null, def rRepoAlt=null, def tag="${rspVersion}-${minorRVersion}") {
+def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def dockerfile='./Dockerfile', def rVersionAlt=null, def pyVersion=null, def pyVersionAlt=null, def rRepoAlt=null, def tag=null) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
@@ -47,6 +47,11 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def do
       altArgs = "${altArgs} --build-arg R_REPO_ALT=${rRepoAlt}"
     }
     print "Using Alternate Arguments: ${altArgs}"
+
+    if (!tag) {
+      tag = "${rspVersion}-${minorRVersion}"
+    }
+    print "Building tag: ${tag}"
 
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
