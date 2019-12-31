@@ -25,7 +25,7 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def dockerfile='./Dockerfile', def rVersionAlt=null, def pyVersion=null, def pyVersionAlt=null, def rRepoAlt=null, def tag=null) {
+def buildImage(Map args, def rspVersion, def rVersion, def rRepo) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
@@ -34,24 +34,38 @@ def buildImage(def rspVersion, def rVersion, def rRepo, def latest=false, def do
 
     // alt args
     def altArgs = ''
-    if (rVersionAlt) {
-      altArgs = "${altArgs} --build-arg R_VERSION_ALT=${rVersionAlt}"
+    if (args.rVersionAlt) {
+      altArgs = "${altArgs} --build-arg R_VERSION_ALT=${args.rVersionAlt}"
     }
-    if (pyVersion) {
-      altArgs = "${altArgs} --build-arg PYTHON_VERSION=${pyVersion}"
+    if (args.pyVersion) {
+      altArgs = "${altArgs} --build-arg PYTHON_VERSION=${args.pyVersion}"
     }
-    if (pyVersionAlt) {
-      altArgs = "${altArgs} --build-arg PYTHON_VERSION_ALT=${pyVersionAlt}"
+    if (args.pyVersionAlt) {
+      altArgs = "${altArgs} --build-arg PYTHON_VERSION_ALT=${args.pyVersionAlt}"
     }
-    if (rRepoAlt) {
-      altArgs = "${altArgs} --build-arg R_REPO_ALT=${rRepoAlt}"
+    if (args.rRepoAlt) {
+      altArgs = "${altArgs} --build-arg R_REPO_ALT=${args.rRepoAlt}"
     }
     print "Using Alternate Arguments: ${altArgs}"
 
-    if (!tag) {
+    if (!args.tag) {
       tag = "${rspVersion}-${minorRVersion}"
+    } else {
+      tag = args.tag
     }
     print "Building tag: ${tag}"
+
+    if (!args.dockerfile) {
+      dockerfile = './Dockerfile'
+    } else {
+      dockerfile = args.dockerfile
+    }
+
+    if (!args.latest) {
+      latest = false
+    } else {
+      latest = args.latest
+    }
 
     def image = pullBuildPush(
           image_name: 'sol-eng-demo-server',
@@ -92,7 +106,7 @@ ansiColor('xterm') {
   }
   stage('build') {
     parallel '3.6': {
-      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), true)
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
       print "Finished 3.6"
     },
     '3.5': {
