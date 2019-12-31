@@ -25,12 +25,17 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(Map args, def rspVersion, def rVersion, def rRepo) {
+def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo) {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
     node('docker') {
     checkout scm
+
+    if (!args) {
+      // create dummy map so lookups do not fail
+      args = [dummy: true]
+    }
 
     // alt args
     def altArgs = ''
