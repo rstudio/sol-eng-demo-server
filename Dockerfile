@@ -203,7 +203,7 @@ RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_ju
 
 # Install Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION=3.6.9
+ARG PYTHON_VERSION=3.7.3
 COPY ./requirements.txt /opt/python/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
