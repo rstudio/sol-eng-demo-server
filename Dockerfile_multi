@@ -160,7 +160,7 @@ RUN apt-get update -y && \
 
 # Install R -------------------------------------------------------------------#
 
-ARG R_VERSION=3.6.1
+ARG R_VERSION=3.6.2
 RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION}_1_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive r-${R_VERSION}_1_amd64.deb
 
@@ -184,7 +184,7 @@ RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer
 
 # Install Alt R -------------------------------------------------------------------#
 
-ARG R_VERSION_ALT=3.6.1
+ARG R_VERSION_ALT=3.5.3
 RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION_ALT}_1_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive r-${R_VERSION_ALT}_1_amd64.deb
 
