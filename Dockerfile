@@ -125,7 +125,12 @@ RUN apt-get update -y && \
     unixodbc-dev \
     wget \
     zlib1g-dev  \
-    libfontconfig1-dev
+    libfontconfig1-dev \
+    # other dev dependencies
+    vim \
+    psmisc \
+    tree
+    
 
 # Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
 # RUN apt-get update -y && \
@@ -205,15 +210,16 @@ RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_ju
 
 ARG PYTHON_VERSION=3.7.3
 COPY ./requirements.txt /opt/python/requirements.txt
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
+RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
+    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
     /opt/python/${PYTHON_VERSION}/bin/pip install -r /opt/python/requirements.txt && \
-    rm -rf Miniconda3-latest-Linux-x86_64.sh && \
+    rm -rf Miniconda3-*-Linux-x86_64.sh && \
     /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python
 
 # Install RStudio Professional Drivers ----------------------------------------#
 
