@@ -219,7 +219,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
     /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
 # Install RStudio Professional Drivers ----------------------------------------#
 
