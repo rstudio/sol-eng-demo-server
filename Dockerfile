@@ -228,7 +228,9 @@ RUN apt-get update -y && \
 
 ARG DRIVERS_VERSION=1.6.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
-    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
+    rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
+    cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini
 
 # install latest versions of important IDE packages
 RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
