@@ -16,21 +16,14 @@ RUN apt-get update -y && \
     rrdtool \
     wget
 
-ARG RSP_PLATFORM=bionic
+ARG RSP_PLATFORM=xenial
 ARG RSP_VERSION=1.2.5001-3
-
-# install full RSP for now...
-RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/server/${RSP_PLATFORM}/amd64/rstudio-server-pro-${RSP_VERSION}-amd64.deb && \
-    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-server-pro-${RSP_VERSION}-amd64.deb && \
-    rm -f ./rstudio-server-pro-${RSP_VERSION}-amd64.deb
-
-# 1.2 way
-#RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
-#    mkdir -p /usr/lib/rstudio-server && \
-#    tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
-#    mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
-#    rm -rf /usr/lib/rstudio-server/rsp-session* && \
-#    rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
+RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
+    mkdir -p /usr/lib/rstudio-server && \
+    tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
+    mv /usr/lib/rstudio-server/rsp-session*/* /usr/lib/rstudio-server/ && \
+    rm -rf /usr/lib/rstudio-server/rsp-session* && \
+    rm -f ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz
 
 EXPOSE 8788/tcp
 
