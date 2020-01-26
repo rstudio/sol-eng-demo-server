@@ -21,8 +21,8 @@ ARG RSP_VERSION=1.2.5001-3
 
 # install full RSP for now...
 RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/server/${RSP_PLATFORM}/amd64/rstudio-server-pro-${RSP_VERSION}-amd64.deb && \
-    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-server-pro-${RSP_PLATFORM}-${RSP_VERSION}.deb && \
-    rm -f ./rstudio-server-pro-${RSP_PLATFORM}-${RSP_VERSION}.deb
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-server-pro-${RSP_VERSION}-amd64.deb && \
+    rm -f ./rstudio-server-pro-${RSP_VERSION}-amd64.deb
 
 # 1.2 way
 #RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
