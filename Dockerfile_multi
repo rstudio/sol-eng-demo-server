@@ -16,7 +16,7 @@ RUN apt-get update -y && \
     rrdtool \
     wget
 
-ARG RSP_PLATFORM=trusty
+ARG RSP_PLATFORM=xenial
 ARG RSP_VERSION=1.2.5001-3
 RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
     mkdir -p /usr/lib/rstudio-server && \
