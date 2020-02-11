@@ -120,6 +120,7 @@ RUN apt-get update -y && \
     tcl \
     tesseract-ocr-eng \
     texlive \
+    texlive-latex-extra \
     tk \
     tk-table \
     unixodbc-dev \
