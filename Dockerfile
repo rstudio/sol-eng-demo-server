@@ -170,7 +170,7 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
-RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
+RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
