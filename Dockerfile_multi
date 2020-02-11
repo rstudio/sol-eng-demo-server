@@ -169,7 +169,7 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 # Install R packages ----------------------------------------------------------#
 
-RUN /opt/R/${R_VERSION}/bin/R CMD javareconf
+RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
@@ -190,7 +190,7 @@ RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION_ALT}_1_amd6
 
 # Install Alt R packages ----------------------------------------------------------#
 
-RUN /opt/R/${R_VERSION_ALT}/bin/R CMD javareconf
+RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION_ALT}/bin/R CMD javareconf
 
 COPY ./pkg_names.csv /opt/R/${R_VERSION_ALT}/lib/pkg_names.csv
 COPY ./pkg_installer.R /opt/R/${R_VERSION_ALT}/lib/pkg_installer.R
