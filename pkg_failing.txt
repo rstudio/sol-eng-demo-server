@@ -1,5 +1,6 @@
 askpass
 autocogs
+aws.s3
 BiocManager
 cliapp
 cloudml
@@ -21,6 +22,7 @@ mleap
 modeest
 modeldb
 nomnoml
+noncensus
 pagedown
 pak
 parsnip
@@ -33,18 +35,22 @@ r2d3
 radix
 rayshader
 reactlog
+rgexf
 rJava
 ROracle
 rrd
 samr
 sass
 shinytest
+SnakeCharmR
 tabulizer
 tabulizerjars
 tfdeploy
 tidymodels
 trelliscopejs
+trimcluster
 umap
 vroom
 websocket
 xopen
+zipcode
