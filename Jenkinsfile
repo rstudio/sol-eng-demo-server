@@ -110,7 +110,20 @@ ansiColor('xterm') {
     }
   }
   stage('build') {
-    parallel //'3.6': {
+    parallel 'apache-proxy': {
+      def apache_image = pullBuildPush(
+            image_name: 'apache-proxy',
+            image_tag: '1.0',
+            // can use this to invalidate the cache if needed
+            // cache_tag: 'none',
+            latest_tag: true,
+            dockerfile: 'Dockerfile',
+	    docker_context: './helper/apache-proxy/',
+            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+            push: pushImage
+          )
+    }
+    //parallel '3.6': {
     //  def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
     //  print "Finished 3.6"
     //},
@@ -126,19 +139,6 @@ ansiColor('xterm') {
     //  def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002")
     //  print "Finished 202002"
     //},
-    'apache_proxy': {
-      def apache_image = pullBuildPush(
-            image_name: 'apache-proxy',
-            image_tag: '1.0',
-            // can use this to invalidate the cache if needed
-            // cache_tag: 'none',
-            latest_tag: true,
-            dockerfile: 'Dockerfile',
-	    docker_context: './helper/apache-proxy/',
-            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
-            push: pushImage
-          )
-    }
     //'3.3': {
     //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
     //  //buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
