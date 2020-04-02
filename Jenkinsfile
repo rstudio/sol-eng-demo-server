@@ -111,6 +111,7 @@ ansiColor('xterm') {
   }
   stage('build') {
     parallel 'apache-proxy': {
+      checkout scm
       def apache_image = pullBuildPush(
             image_name: 'apache-proxy',
             image_tag: '1.0',
@@ -122,6 +123,7 @@ ansiColor('xterm') {
             registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
             push: pushImage
           )
+      print "Finished apache-proxy"
     }
     //parallel '3.6': {
     //  def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
