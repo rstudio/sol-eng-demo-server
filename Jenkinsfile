@@ -119,7 +119,7 @@ ansiColor('xterm') {
               // can use this to invalidate the cache if needed
               // cache_tag: 'none',
               latest_tag: true,
-              dockerfile: 'Dockerfile',
+              dockerfile: './helper/apache-proxy/Dockerfile',
               docker_context: './helper/apache-proxy/',
               registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
               push: pushImage
