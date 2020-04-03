@@ -126,23 +126,23 @@ ansiColor('xterm') {
             )
         print "Finished apache-proxy"
       }
+    },
+    parallel '3.6': {
+      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
+      print "Finished 3.6"
+    },
+    '3.5': {
+      def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
+      print "Finished 3.5"
+    },
+    '3.4': {
+      def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+      print "Finished 3.4"
+    },
+    '202002': {
+      def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002")
+      print "Finished 202002"
     }
-    //parallel '3.6': {
-    //  def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
-    //  print "Finished 3.6"
-    //},
-    //'3.5': {
-    //  def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-    //  print "Finished 3.5"
-    //},
-    //'3.4': {
-    //  def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-    //  print "Finished 3.4"
-    //},
-    //'202002': {
-    //  def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002")
-    //  print "Finished 202002"
-    //},
     //'3.3': {
     //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
     //  //buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
