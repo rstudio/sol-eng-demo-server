@@ -127,7 +127,7 @@ ansiColor('xterm') {
         print "Finished apache-proxy"
       }
     },
-    parallel '3.6': {
+    '3.6': {
       def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
       print "Finished 3.6"
     },
