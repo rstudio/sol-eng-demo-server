@@ -174,8 +174,8 @@ RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
 
 RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION}/bin/R CMD javareconf
 
-COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
-COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
+#COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
+#COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
 ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
 ARG R_REPO_LATEST='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
@@ -183,7 +183,7 @@ RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/$
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
 # need to install packages from list of packages...
-RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION}/lib/R/library\")"
+#RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION}/lib/R/library\")"
 
 # Install jupyter -------------------------------------------------------------#
 
