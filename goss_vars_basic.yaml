@@ -1,0 +1,4 @@
+packages:
+  - "rsconnect"
+  - "rstudioapi"
+  - "odbc"

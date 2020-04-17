@@ -25,7 +25,7 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
 pushImage = (env.BRANCH_NAME == 'master')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo) {
+def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo, def gossVars='goss_vars_basic.yaml') {
     def minorRVersion = minorVersion(rVersion)
     print "Building R version: ${rVersion}, minor version: ${minorRVersion}"
     print "Using R Repository: ${rRepo}"
@@ -95,7 +95,7 @@ def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo) {
     curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o ./dgoss
     chmod +rx ./dgoss
 
-    GOSS_VARS=goss_vars.yaml GOSS_PATH=./goss ./dgoss run -it -e R_VERSION=${rVersion} ${imageName}
+    GOSS_VARS=${gossVars} GOSS_PATH=./goss ./dgoss run -it -e R_VERSION=${rVersion} ${imageName}
     """
     return image
     }
@@ -140,7 +140,7 @@ ansiColor('xterm') {
       print "Finished 3.4"
     },
     '202002': {
-      def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002")
+      def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002", gossVars: 'goss_vars.yaml')
       print "Finished 202002"
     }
     //'3.3': {
