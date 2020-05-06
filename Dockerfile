@@ -177,8 +177,8 @@ RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION}/bin/R CMD ja
 #COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
 #COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
 
-ARG R_REPO='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
-ARG R_REPO_LATEST='https://demo.rstudiopm.com/cran/__linux__/bionic/latest'
+ARG R_REPO='https://colorado.rstudio.com/rspm/cran/__linux__/bionic/latest'
+ARG R_REPO_LATEST='https://colorado.rstudio.com/rspm/cran/__linux__/bionic/latest'
 RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
