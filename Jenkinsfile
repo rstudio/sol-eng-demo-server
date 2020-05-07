@@ -16,8 +16,8 @@ def minorVersion(def version) {
   return val
 }
 
-String buildRRepo(def pointer='latest', def repo='all',  def host='demo') {
-  def value = "https://${host}.rstudiopm.com/${repo}/__linux__/bionic/${pointer}"
+String buildRRepo(def pointer='latest', def repo='all',  def host='colorado.rstudio.com/rspm') {
+  def value = "https://${host}/${repo}/__linux__/bionic/${pointer}"
   return value
 }
 
@@ -127,6 +127,10 @@ ansiColor('xterm') {
         print "Finished apache-proxy"
       }
     },
+    //'4.0': {
+    //  def image = buildImage(RSPVersion, '4.0.0', buildRRepo('3295'))
+    //  print "Finished 4.0"
+    //},
     '3.6': {
       def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
       print "Finished 3.6"
@@ -143,11 +147,6 @@ ansiColor('xterm') {
       def image = buildImage(RSPVersion, '3.6.2', buildRRepo('2603'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.5.3', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('1408'), tag: "${RSPVersion}-202002", gossVars: 'goss_vars.yaml')
       print "Finished 202002"
     }
-    //'3.3': {
-    //  buildImage(RSPVersion, '3.3.3', buildRRepo('324'))
-    //  //buildImage(RSPVersion, '3.3.3', buildRRepo('3', 'cran', 'cluster'))
-    //  print "Finished 3.3"
-    //}
   }
   stage('finish') {
     node('docker') {
