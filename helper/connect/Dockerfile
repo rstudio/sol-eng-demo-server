@@ -2,11 +2,6 @@ FROM ubuntu:bionic
 
 LABEL maintainer="sol-eng@rstudio.com"
 
-# Locale configuration --------------------------------------------------------#
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
 # hadolint ignore=DL3008,DL3009
@@ -214,6 +209,18 @@ RUN apt-get update --fix-missing \
     && rm rstudio-connect_${RSC_VERSION}_amd64.deb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Locale configuration --------------------------------------------------------#
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y locales && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 EXPOSE 3939/tcp
 ENV RSC_LICENSE ""
