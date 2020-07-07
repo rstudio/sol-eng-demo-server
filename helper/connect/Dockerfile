@@ -162,7 +162,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_2} && \
     /opt/python/${PYTHON_VERSION_2}/bin/conda install -y python==${PYTHON_VERSION_2} && \
     /opt/python/${PYTHON_VERSION_2}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION_2}/bin/pip update setuptools && \
+    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
     rm -rf Miniconda3-*-Linux-x86_64.sh
 
 ENV PATH="/opt/python/${PYTHON_VERSION_2}/bin:${PATH}"
@@ -175,7 +175,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION}/bin/pip update setuptools && \
+    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
     rm -rf Miniconda3-*-Linux-x86_64.sh
 
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
@@ -188,7 +188,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_ALT} && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/conda install -y python==${PYTHON_VERSION_ALT} && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION}/bin/pip update setuptools && \
+    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
     rm -rf Miniconda3-*-Linux-x86_64.sh
 
 # Runtime settings ------------------------------------------------------------#
