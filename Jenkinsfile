@@ -127,13 +127,26 @@ ansiColor('xterm') {
         print "Finished apache-proxy"
       }
     },
-    //'4.0': {
-    //  def image = buildImage(RSPVersion, '4.0.0', buildRRepo('3295'))
-    //  print "Finished 4.0"
-    //},
+    'connect': {
+      node('docker') {
+        checkout scm
+        def apache_image = pullBuildPush(
+              image_name: 'connect',
+              image_tag: '1.0',
+              // can use this to invalidate the cache if needed
+              // cache_tag: 'none',
+              latest_tag: true,
+              dockerfile: './helper/connect/Dockerfile',
+              docker_context: './helper/connect/',
+              registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+              push: pushImage
+            )
+        print "Finished connect"
+      }
+    },
     '4.0': {
       def image = buildImage(RSPVersion, '4.0.2', buildRRepo('4047'))
-      print "Finished 3.6"
+      print "Finished 4.0"
     },
     '3.6': {
       def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
