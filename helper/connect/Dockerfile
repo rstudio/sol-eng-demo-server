@@ -158,7 +158,6 @@ RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION_ALT}_1_amd6
 # Install Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION_2=3.8.3
-COPY ./requirements.txt /opt/python/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_2} && \
     /opt/python/${PYTHON_VERSION_2}/bin/conda install -y python==${PYTHON_VERSION_2} && \
@@ -172,7 +171,6 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION_2}/bin/python"
 # Install Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION=3.7.3
-COPY ./requirements.txt /opt/python/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
