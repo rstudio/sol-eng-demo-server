@@ -204,7 +204,7 @@ ARG RSC_VERSION=1.8.4-11
 RUN apt-get update --fix-missing \
     && apt-get install -y gpg dpkg-sig \
     && curl -LO https://cdn.rstudio.com/connect/installer/installer-latest.sh
-    && bash installer-latest.sh ${RSC_VERSION}
+    && UNATTENDED=1 bash installer-latest.sh ${RSC_VERSION}
     && rm installer-latest.sh
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
