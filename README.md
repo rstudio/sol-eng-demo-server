@@ -46,3 +46,11 @@ Some packages are ok to fail... and we have more failures for older R versions..
 - Add packages that are OK failing to `pkg_failing.txt`
 - Run `make vars` to regenerate the `goss_vars.yaml`
 - Ultimately, we need to take some additional passes at these to find out why they are failing
+
+## Adding Images
+
+To add an image, you will need to create a repository in ECS (in the subaccount):
+
+https://us-east-1.console.aws.amazon.com/ecr/repositories?region=us-east-1
+
+Be sure to copy the Policy JSON / Permissions from one of the existing repositories.
