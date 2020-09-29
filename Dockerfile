@@ -223,6 +223,13 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
 ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
+# Install VSCode code-server --------------------------------------------------#
+ARG CODE_SERVER_VERSION=3.2.0
+RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION}-linux-x86_64.tar.gz && \
+    mkdir -p /opt/code-server && \
+    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ && \
+    rm -f ./code-server.tar.gz
+
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
