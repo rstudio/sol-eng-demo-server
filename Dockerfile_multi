@@ -272,6 +272,13 @@ RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRI
 RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 
+# Install VSCode code-server --------------------------------------------------#
+ARG CODE_SERVER_VERSION=3.2.0
+RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION}-linux-x86_64.tar.gz && \
+    mkdir -p /opt/code-server && \
+    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ && \
+    rm -f ./code-server.tar.gz
+
 # Locale configuration --------------------------------------------------------#
 
 RUN apt-get update -y && \
