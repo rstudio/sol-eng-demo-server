@@ -230,6 +230,13 @@ RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/do
     tar -zxvf ./code-server.tar.gz -C /opt/code-server/ && \
     rm -f ./code-server.tar.gz
 
+RUN curl -o Ikuyadeu.r-1.1.0.vsix.gz -L https://rstd.io/vs-code-r-ext  && \
+    gunzip Ikuyadeu.r-1.1.0.vsix.gz && \
+    /opt/code-server/code-server-3.2.0-linux-x86_64/code-server --extensions-dir /opt/code-server/extensions --install-extension Ikuyadeu.r-1.1.0.vsix && \
+    rm -rf Ikuyadeu.r-1.1.0.vsix.gz Ikuyadeu.r-1.1.0.vsix
+
+RUN /opt/code-server/code-server-3.2.0-linux-x86_64/code-server --extensions-dir /opt/code-server/extensions --install-extension ms-python.python
+
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
