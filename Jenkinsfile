@@ -115,7 +115,7 @@ ansiColor('xterm') {
         checkout scm
         def apache_image = pullBuildPush(
               image_name: 'apache-proxy',
-              image_tag: '1.0',
+              image_tag: "1.1-${BUILD_NUMBER}",
               // can use this to invalidate the cache if needed
               // cache_tag: 'none',
               latest_tag: true,
