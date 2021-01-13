@@ -132,7 +132,7 @@ ansiColor('xterm') {
         checkout scm
         def apache_image = pullBuildPush(
               image_name: 'connect',
-              image_tag: '1.0',
+              image_tag: '1.8.6',
               // can use this to invalidate the cache if needed
               // cache_tag: 'none',
               latest_tag: true,

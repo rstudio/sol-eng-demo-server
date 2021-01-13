@@ -200,7 +200,7 @@ COPY startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
 # Download RStudio Connect -----------------------------------------------------#
-ARG RSC_VERSION=1.8.4-11
+ARG RSC_VERSION=1.8.6.1
 RUN apt-get update --fix-missing \
     && apt-get install -y gpg dpkg-sig \
     && curl -LO https://cdn.rstudio.com/connect/installer/installer-latest.sh \
