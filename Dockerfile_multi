@@ -14,7 +14,6 @@ RUN apt-get update -y && \
     libuser \
     libuser1-dev \
     rrdtool \
-    sudo \
     wget
 
 ARG RSP_PLATFORM=xenial
