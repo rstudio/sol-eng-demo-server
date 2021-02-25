@@ -1,6 +1,7 @@
 FROM ubuntu:focal
 LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
+ARG DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=DL3008,DL3009
 RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
         bzip2 \
@@ -11,7 +12,6 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
         libglib2.0-0 \
         libpq5 \
         libsm6 \
-        libssl1.0.0 \
         libssl-dev \
         libuser \
         libuser1-dev \
@@ -30,7 +30,6 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Install R -------------------------------------------------------------------#
 ARG R_DISTRIBUTION=ubuntu-2004
@@ -106,15 +105,22 @@ RUN apt-get update --fix-missing \
     && rm -rf /var/lib/apt/lists/*
 
 # Change Startup behavior
+COPY sssd.conf /etc/sssd/sssd.conf
+RUN mkdir -p /startup/custom/ \
+    && apt-get update --fix-missing \
+    && apt-get install -y \
+        supervisor \
+        sssd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/lib/rstudio-server/monitor/log \
+    && chown -R rstudio-server:rstudio-server /var/lib/rstudio-server/monitor \
+    && chmod 600 /etc/sssd/sssd.conf
+
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY startup/* /startup/base/
-RUN mkdir -p /startup/custom/
-
-# Create log dir
-RUN mkdir -p /var/lib/rstudio-server/monitor/log && \
-    chown -R rstudio-server:rstudio-server /var/lib/rstudio-server/monitor
 
 EXPOSE 8787/tcp
 
-ENTRYPOINT ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
-CMD [""]
+ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD []
