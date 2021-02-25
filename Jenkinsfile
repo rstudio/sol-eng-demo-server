@@ -110,27 +110,10 @@ ansiColor('xterm') {
     }
   }
   stage('build') {
-    parallel 'apache-proxy': {
+    parallel 'connect': {
       node('docker') {
         checkout scm
-        def apache_image = pullBuildPush(
-              image_name: 'apache-proxy',
-              image_tag: "1.1-${BUILD_NUMBER}",
-              // can use this to invalidate the cache if needed
-              // cache_tag: 'none',
-              latest_tag: true,
-              dockerfile: './helper/apache-proxy/Dockerfile',
-              docker_context: './helper/apache-proxy/',
-              registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
-              push: pushImage
-            )
-        print "Finished apache-proxy"
-      }
-    },
-    'connect': {
-      node('docker') {
-        checkout scm
-        def apache_image = pullBuildPush(
+        def connect_image = pullBuildPush(
               image_name: 'connect',
               image_tag: '1.8.6',
               // can use this to invalidate the cache if needed
@@ -144,6 +127,42 @@ ansiColor('xterm') {
         print "Finished connect"
       }
     },
+            'launcher': {
+                node('docker') {
+                    checkout scm
+                    def launcher_image = pullBuildPush(
+                            image_name: 'launcher',
+                            image_tag: "${RSPVersion}",
+                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
+                            // can use this to invalidate the cache if needed
+                            // cache_tag: 'none',
+                            latest_tag: false,
+                            dockerfile: './helper/launcher/Dockerfile',
+                            docker_context: './helper/launcher/',
+                            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+                            push: pushImage
+                    )
+                    print "Finished launcher"
+                }
+            },
+            'workbench': {
+                node('docker') {
+                    checkout scm
+                    def launcher_image = pullBuildPush(
+                            image_name: 'workbench',
+                            image_tag: "${RSPVersion}",
+                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
+                            // can use this to invalidate the cache if needed
+                            // cache_tag: 'none',
+                            latest_tag: false,
+                            dockerfile: './helper/workbench/Dockerfile',
+                            docker_context: './helper/workbench/',
+                            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+                            push: pushImage
+                    )
+                    print "Finished launcher"
+                }
+            },
     '4.0': {
       def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'))
       print "Finished 4.0"
