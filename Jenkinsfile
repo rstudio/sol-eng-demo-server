@@ -131,9 +131,9 @@ ansiColor('xterm') {
                 node('docker') {
                     checkout scm
                     def launcher_image = pullBuildPush(
-                            // BEWARE - version is hard-coded...
                             image_name: 'launcher',
-                            image_tag: '1.4.1103-4',
+                            image_tag: "${RSPVersion}",
+                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
                             // can use this to invalidate the cache if needed
                             // cache_tag: 'none',
                             latest_tag: false,
@@ -149,9 +149,9 @@ ansiColor('xterm') {
                 node('docker') {
                     checkout scm
                     def launcher_image = pullBuildPush(
-                            // BEWARE - version is hard-coded...
                             image_name: 'workbench',
-                            image_tag: '1.4.1103-4',
+                            image_tag: "${RSPVersion}",
+                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
                             // can use this to invalidate the cache if needed
                             // cache_tag: 'none',
                             latest_tag: false,
