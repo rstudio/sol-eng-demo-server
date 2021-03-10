@@ -130,6 +130,7 @@ RUN apt-get update -y && \
     # other dev deps
     vim \
     psmisc \
+    qpdf \
     tree
 
 # Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)

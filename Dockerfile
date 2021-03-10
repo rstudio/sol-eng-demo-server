@@ -130,6 +130,7 @@ RUN apt-get update -y && \
     # other dev dependencies
     vim \
     psmisc \
+    qpdf \
     tree
     
 
