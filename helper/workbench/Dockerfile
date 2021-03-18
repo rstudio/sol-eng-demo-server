@@ -91,7 +91,7 @@ COPY startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 COPY conf/* /etc/rstudio/
 
-# Install RStudio Server Pro (for launcher) --------------------------------------------------#
+# Install RStudio Server Pro --------------------------------------------------#
 ARG RSP_VERSION=1.4.1103-4
 ARG RSP_DOWNLOAD_URL=https://download2.rstudio.org/server/bionic/amd64
 RUN apt-get update --fix-missing \
