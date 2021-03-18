@@ -33,5 +33,5 @@ tail -n 100 -f \
   /var/lib/rstudio-launcher/Kubernetes/*.log &
 
 # the main container process
-# can use exec because no "trap" necessary for launcher
-exec /usr/lib/rstudio-server/bin/rstudio-launcher
+# cannot use exec or we lose the "tail" running in the background
+/usr/lib/rstudio-server/bin/rstudio-launcher
