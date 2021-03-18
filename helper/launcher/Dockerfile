@@ -21,11 +21,15 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Runtime settings ------------------------------------------------------------#
-ARG TINI_VERSION=0.18.0
-RUN curl -L -o /usr/local/bin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini && \
-    chmod +x /usr/local/bin/tini
 
-# Copy config
+# Set default env values
+ENV RSP_TESTUSER rstudio
+ENV RSP_TESTUSER_PASSWD rstudio
+ENV RSP_TESTUSER_UID 10000
+
+# Copy config and startup
+COPY startup.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
 COPY conf/* /etc/rstudio/
 
 # Install RStudio Server Pro (for launcher) --------------------------------------------------#
@@ -41,7 +45,23 @@ RUN apt-get update --fix-missing \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Change Startup behavior
+COPY sssd.conf /etc/sssd/sssd.conf
+RUN mkdir -p /startup/custom/ \
+    && apt-get update --fix-missing \
+    && apt-get install -y \
+        supervisor \
+        sssd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/lib/rstudio-server/monitor/log \
+    && chown -R rstudio-server:rstudio-server /var/lib/rstudio-server/monitor \
+    && chmod 600 /etc/sssd/sssd.conf
+
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY startup/* /startup/base/
+
 EXPOSE 5559/tcp
 
-ENTRYPOINT ["tini", "--"]
-CMD ["/usr/lib/rstudio-server/bin/rstudio-launcher"]
+ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD []
