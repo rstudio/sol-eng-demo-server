@@ -132,7 +132,7 @@ RUN apt-get update -y && \
     psmisc \
     qpdf \
     tree
-    
+
 
 # Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
 # RUN apt-get update -y && \
@@ -226,9 +226,10 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
 # Install VSCode code-server --------------------------------------------------#
 ARG CODE_SERVER_VERSION=3.2.0
-RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION}-linux-x86_64.tar.gz && \
+# TODO: remove the temporary regex to resolve different behavior for code-server
+RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/$( echo $CODE_SERVER_VERSION | sed -r 's/(3\.2\.0)/\1/; t; s/([0-9]\.[0-9]\.[0-9])/v\1/' )/code-server-${CODE_SERVER_VERSION}-linux-$( echo $CODE_SERVER_VERSION | sed -r 's/(3\.2\.0)/x86_64/; t; s/([0-9]\.[0-9]\.[0-9])/amd64/' ).tar.gz && \
     mkdir -p /opt/code-server && \
-    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ && \
+    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ --strip-components 1 && \
     rm -f ./code-server.tar.gz
 
 RUN curl -o Ikuyadeu.r-1.1.0.vsix.gz -L https://rstd.io/vs-code-r-ext  && \
