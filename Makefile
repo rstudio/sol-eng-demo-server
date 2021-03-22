@@ -1,3 +1,14 @@
+RSP_VERSION ?= 1.4.1106-5
+CODE_SERVER_VERSION ?= 3.2.0
+
+update-versions:  ## Update the version files for all products
+	@sed -i '' "s/^.*/${RSP_VERSION}/g" rsp-version.txt
+	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" Dockerfile
+	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" Dockerfile_multi
+	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" helper/launcher/Dockerfile
+	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" helper/workbench/Dockerfile
+	@sed -i '' "s/^ARG CODE_SERVER_VERSION=.*/ARG CODE_SERVER_VERSION=${CODE_SERVER_VERSION}/g" Dockerfile
+	@sed -i '' "s/^ARG CODE_SERVER_VERSION=.*/ARG CODE_SERVER_VERSION=${CODE_SERVER_VERSION}/g" Dockerfile_multi
 vars:
 	echo "packages:" > goss_vars.yaml && \
 	cat pkg_names.csv | tail -n +2 | grep -v -f pkg_failing.txt | sort | uniq | sed -E 's/(^.*)/  - "\1"/g' >> goss_vars.yaml

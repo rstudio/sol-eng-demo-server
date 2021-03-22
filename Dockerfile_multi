@@ -17,7 +17,7 @@ RUN apt-get update -y && \
     wget
 
 ARG RSP_PLATFORM=xenial
-ARG RSP_VERSION=1.4.1103-1
+ARG RSP_VERSION=1.4.1106-5
 RUN curl -O https://s3.amazonaws.com/rstudio-ide-build/session/${RSP_PLATFORM}/rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz && \
     mkdir -p /usr/lib/rstudio-server && \
     tar -zxvf ./rsp-session-${RSP_PLATFORM}-${RSP_VERSION}.tar.gz -C /usr/lib/rstudio-server/ && \
@@ -275,17 +275,18 @@ RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\"
 
 # Install VSCode code-server --------------------------------------------------#
 ARG CODE_SERVER_VERSION=3.2.0
-RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION}-linux-x86_64.tar.gz && \
+# TODO: remove the temporary regex to resolve different behavior for code-server
+RUN curl -o code-server.tar.gz -L https://github.com/cdr/code-server/releases/download/$( echo $CODE_SERVER_VERSION | sed -r 's/(3\.2\.0)/\1/; t; s/([0-9]\.[0-9]\.[0-9])/v\1/' )/code-server-${CODE_SERVER_VERSION}-linux-$( echo $CODE_SERVER_VERSION | sed -r 's/(3\.2\.0)/x86_64/; t; s/([0-9]\.[0-9]\.[0-9])/amd64/' ).tar.gz && \
     mkdir -p /opt/code-server && \
-    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ && \
+    tar -zxvf ./code-server.tar.gz -C /opt/code-server/ --strip-components 1 && \
     rm -f ./code-server.tar.gz
 
 RUN curl -o Ikuyadeu.r-1.1.0.vsix.gz -L https://rstd.io/vs-code-r-ext  && \
     gunzip Ikuyadeu.r-1.1.0.vsix.gz && \
-    /opt/code-server/code-server-3.2.0-linux-x86_64/code-server --extensions-dir /opt/code-server/extensions --install-extension Ikuyadeu.r-1.1.0.vsix && \
+    /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension Ikuyadeu.r-1.1.0.vsix && \
     rm -rf Ikuyadeu.r-1.1.0.vsix.gz Ikuyadeu.r-1.1.0.vsix
 
-RUN /opt/code-server/code-server-3.2.0-linux-x86_64/code-server --extensions-dir /opt/code-server/extensions --install-extension ms-python.python
+RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension ms-python.python
 
 # Locale configuration --------------------------------------------------------#
 
