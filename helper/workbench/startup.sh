@@ -30,6 +30,7 @@ mkdir -p /var/lib/rstudio-launcher
 chown rstudio-server:rstudio-server /var/lib/rstudio-launcher
 su rstudio-server -c 'touch /var/lib/rstudio-launcher/rstudio-launcher.log'
 touch /var/log/rstudio-server.log
+touch /var/log/rstudio-launcher.log
 mkdir -p /var/lib/rstudio-launcher/Local
 chown rstudio-server:rstudio-server /var/lib/rstudio-launcher/Local
 su rstudio-server -c 'touch /var/lib/rstudio-launcher/Local/rstudio-local-launcher-placeholder.log'
@@ -64,7 +65,7 @@ fi
 
 # Start Launcher
 if [ "$RSP_LAUNCHER" == "true" ]; then
-  /usr/lib/rstudio-server/bin/rstudio-launcher > /var/log/rstudio-launcher.log 2>&1 &
+  /usr/lib/rstudio-server/bin/rstudio-launcher >> /var/log/rstudio-launcher.log 2>&1 &
   wait-for-it.sh localhost:5559 -t $RSP_LAUNCHER_TIMEOUT
 fi
 
@@ -78,4 +79,4 @@ tail -n 100 -f \
 
 # the main container process
 # cannot use "exec" or the "trap" will be lost
-/usr/lib/rstudio-server/bin/rserver --server-daemonize 0 > /var/log/rstudio-server.log 2>&1
+/usr/lib/rstudio-server/bin/rserver --server-daemonize 0 >> /var/log/rstudio-server.log 2>&1
