@@ -199,8 +199,12 @@ RUN curl -L -o /usr/local/bin/tini https://github.com/krallin/tini/releases/down
 COPY startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
+# Enforce UID/GID
+RUN groupadd -g 998 -r rstudio-connect && \
+    useradd -g 998 -u 998 -r rstudio-connect
+
 # Download RStudio Connect -----------------------------------------------------#
-ARG RSC_VERSION=1.8.6.1
+ARG RSC_VERSION=1.8.6.6
 RUN apt-get update --fix-missing \
     && apt-get install -y gpg dpkg-sig \
     && curl -LO https://cdn.rstudio.com/connect/installer/installer-latest.sh \

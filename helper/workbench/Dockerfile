@@ -91,6 +91,10 @@ COPY startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 COPY conf/* /etc/rstudio/
 
+# Enforce UID/GID
+RUN groupadd -g 998 -r rstudio-server && \
+    useradd -g 998 -u 998 -r rstudio-server
+
 # Install RStudio Server Pro --------------------------------------------------#
 ARG RSP_VERSION=1.4.1106-5
 ARG RSP_DOWNLOAD_URL=https://download2.rstudio.org/server/bionic/amd64
