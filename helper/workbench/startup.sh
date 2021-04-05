@@ -24,6 +24,30 @@ deactivate() {
 }
 trap deactivate EXIT
 
+# usage: use_init_files [file [file [...]]]
+#    ie: use_init_files /mydir/*
+# execute or source initialization files (file extensions and permissions)
+use_init_files() {
+    echo
+    local file
+    for file; do
+        case "$file" in
+            *.sh)
+                if [ -x "$file" ]; then
+                    echo "$0: executing file $file"
+                    "$file"
+                else
+                    echo "$0: sourcing file $file"
+                    echo "$0: no execute bit set"
+                    . "$file"
+                fi
+                ;;
+            *)  echo "$0: ignoring $file" ;;
+        esac 
+        echo
+    done
+}
+
 # touch log files to initialize them
 su rstudio-server -c 'touch /var/lib/rstudio-server/monitor/log/rstudio-server.log'
 mkdir -p /var/lib/rstudio-launcher
@@ -63,10 +87,16 @@ else
     fi
 fi
 
+# Execute or source *.sh files from /entrypoint.d/
+# - note that order should be deterministic thanks to * magic
+use_init_files /entrypoint.d/*
+
 # Start Launcher
 if [ "$RSP_LAUNCHER" == "true" ]; then
-  /usr/lib/rstudio-server/bin/rstudio-launcher >> /var/log/rstudio-launcher.log 2>&1 &
+  /usr/lib/rstudio-server/bin/rstudio-launcher > /var/log/rstudio-launcher.log 2>&1 &
   wait-for-it.sh localhost:5559 -t $RSP_LAUNCHER_TIMEOUT
+else
+  touch /var/log/rstudio-launcher.log
 fi
 
 tail -n 100 -f \
@@ -79,4 +109,4 @@ tail -n 100 -f \
 
 # the main container process
 # cannot use "exec" or the "trap" will be lost
-/usr/lib/rstudio-server/bin/rserver --server-daemonize 0 >> /var/log/rstudio-server.log 2>&1
+/usr/lib/rstudio-server/bin/rserver --server-daemonize 0 > /var/log/rstudio-server.log 2>&1
