@@ -21,8 +21,8 @@ String buildRRepo(def pointer='latest', def repo='all',  def host='colorado.rstu
   return value
 }
 
-// only push images from master
-pushImage = (env.BRANCH_NAME == 'master')
+// only push images from main
+pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
 def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo, def gossVars='goss_vars_basic.yaml') {
