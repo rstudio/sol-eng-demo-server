@@ -148,7 +148,7 @@ ansiColor('xterm') {
             'workbench': {
                 node('docker') {
                     checkout scm
-                    def launcher_image = pullBuildPush(
+                    def workbench_image = pullBuildPush(
                             image_name: 'workbench',
                             image_tag: "${RSPVersion}",
                             build_args: "--build-arg RSP_VERSION=${RSPVersion}",
@@ -160,7 +160,7 @@ ansiColor('xterm') {
                             registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
                             push: pushImage
                     )
-                    print "Finished launcher"
+                    print "Finished workbench"
                 }
             },
     '4.0': {
