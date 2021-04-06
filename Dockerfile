@@ -252,7 +252,7 @@ RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRI
     # Fix odbcinst.ini until we release 1.6.1 .deb/.rpm
     sed -i '/Installer = RStudio$/cInstaller = RStudio Pro Drivers' /etc/odbcinst.ini
 
-# Install OCI for Oracle Driver
+# Install Instant Client for Oracle Driver
 RUN curl -O https://download.oracle.com/otn_software/linux/instantclient/191000/instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip && \
     unzip instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip -d /opt/oracle && \
     ln -s /opt/oracle/instantclient_19_10/* /opt/rstudio-drivers/oracle/bin/lib/ && \
