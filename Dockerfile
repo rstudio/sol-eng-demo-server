@@ -258,7 +258,7 @@ RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"
 # Locale configuration --------------------------------------------------------#
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y locales
+    DEBIAN_FRONTEND=noninteractive apt-get install -y locales locales-all
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
