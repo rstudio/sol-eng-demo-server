@@ -291,7 +291,7 @@ RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --
 # Locale configuration --------------------------------------------------------#
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y locales
+    DEBIAN_FRONTEND=noninteractive apt-get install -y locales locales-all
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
