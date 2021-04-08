@@ -250,7 +250,9 @@ RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRI
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini && \
     # Fix odbcinst.ini until we release 1.6.1 .deb/.rpm
-    sed -i '/Installer = RStudio$/cInstaller = RStudio Pro Drivers' /etc/odbcinst.ini
+    sed -i '/Installer = RStudio$/cInstaller = RStudio Pro Drivers' /etc/odbcinst.ini && \
+    # Fix Snowflake cacert issue
+    sed -i 's_\[INSTALLDIR\]_/opt/rstudio-drivers/snowflake/bin_' /opt/rstudio-drivers/snowflake/bin/lib/rstudio.snowflakeodbc.ini
 
 # install latest versions of important IDE packages
 RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
