@@ -163,6 +163,23 @@ ansiColor('xterm') {
                     print "Finished workbench"
                 }
             },
+            'oracle': {
+                node('docker') {
+                    checkout scm
+                    def oracle_image = pullBuildPush(
+                            image_name: 'oracle',
+                            image_tag: "1.0",
+                            // can use this to invalidate the cache if needed
+                            // cache_tag: 'none',
+                            latest_tag: false,
+                            dockerfile: './helper/oracle/Dockerfile',
+                            docker_context: './helper/oracle/',
+                            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
+                            push: pushImage
+                    )
+                    print "Finished workbench"
+                }
+            },
     '4.0': {
       def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'))
       print "Finished 4.0"
