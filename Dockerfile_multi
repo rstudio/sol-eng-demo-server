@@ -271,6 +271,12 @@ RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRI
     # Fix Snowflake cacert issue
     sed -i 's_\[INSTALLDIR\]_/opt/rstudio-drivers/snowflake/bin_' /opt/rstudio-drivers/snowflake/bin/lib/rstudio.snowflakeodbc.ini
 
+# Install Instant Client for Oracle Driver
+RUN curl -O https://download.oracle.com/otn_software/linux/instantclient/191000/instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip && \
+    unzip instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip -d /opt/oracle && \
+    ln -s /opt/oracle/instantclient_19_10/* /opt/rstudio-drivers/oracle/bin/lib/ && \
+    rm instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip 
+
 # install latest versions of important IDE packages
 RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
