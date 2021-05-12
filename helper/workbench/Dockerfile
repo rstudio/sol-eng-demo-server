@@ -97,7 +97,7 @@ RUN groupadd -g 998 -r rstudio-server && \
 
 # Install RStudio Server Pro --------------------------------------------------#
 ARG RSP_VERSION=1.4.1707-8
-ARG RSP_DOWNLOAD_URL=https://download2.rstudio.org/server/bionic/amd64
+ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
     && curl -O ${RSP_DOWNLOAD_URL}/rstudio-workbench-${RSP_VERSION}-amd64.deb \
