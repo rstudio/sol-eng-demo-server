@@ -24,7 +24,7 @@ RUN apt-get update --fix-missing \
     && curl -O ${RSP_DOWNLOAD_URL}/rstudio-workbench-${RSP_VERSION}-amd64.deb \
     && gdebi --non-interactive rstudio-workbench-${RSP_VERSION}-amd64.deb \
     && rm rstudio-workbench-${RSP_VERSION}-amd64.deb \
-    && apt-get remove gdebi-core -y \
+    # && apt-get remove gdebi-core -y \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
