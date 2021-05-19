@@ -1,4 +1,4 @@
-RSP_VERSION ?= 1.4.1711-2
+RSP_VERSION ?= 1.4.1713-4
 CODE_SERVER_VERSION ?= 3.2.0
 
 update-versions:  ## Update the version files for all products
