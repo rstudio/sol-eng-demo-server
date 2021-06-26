@@ -246,7 +246,7 @@ RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi
 
-ARG DRIVERS_VERSION=1.7.0
+ARG DRIVERS_VERSION=1.8.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
