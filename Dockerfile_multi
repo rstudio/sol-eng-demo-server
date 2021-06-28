@@ -270,9 +270,7 @@ ARG DRIVERS_VERSION=1.8.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
-    cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini && \
-    # Fix Snowflake cacert issue
-    sed -i 's_\[INSTALLDIR\]_/opt/rstudio-drivers/snowflake/bin_' /opt/rstudio-drivers/snowflake/bin/lib/rstudio.snowflakeodbc.ini
+    cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini
 
 # Install Instant Client for Oracle Driver
 RUN curl -O https://download.oracle.com/otn_software/linux/instantclient/191000/instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip && \
