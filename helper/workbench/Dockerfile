@@ -88,7 +88,9 @@ ENV RSP_LAUNCHER_TIMEOUT 10
 
 # Copy config and startup
 COPY startup.sh /usr/local/bin/startup.sh
-RUN chmod +x /usr/local/bin/startup.sh
+COPY launcher-startup.sh /usr/local/bin/launcher-startup.sh
+RUN chmod +x /usr/local/bin/startup.sh && \
+    chmod +x /usr/local/bin/launcher-startup.sh
 COPY conf/* /etc/rstudio/
 
 # Enforce UID/GID
