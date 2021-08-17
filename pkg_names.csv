@@ -125,6 +125,7 @@ compositions
 conf
 config
 conjoint
+connectwidgets
 corpcor
 corrplot
 corrr
@@ -291,6 +292,7 @@ gifski
 gistr
 git2r
 githubinstall
+gitlink
 glasso
 glmnet
 globals
@@ -522,6 +524,7 @@ plotmo
 plotrix
 pls
 plumber
+plumbertableau
 plyr
 pmml
 png

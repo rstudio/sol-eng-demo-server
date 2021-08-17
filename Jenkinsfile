@@ -180,26 +180,30 @@ ansiColor('xterm') {
                     print "Finished workbench"
                 }
             },
-    '4.0': {
-      def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'))
-      print "Finished 4.0"
-    },
-    '3.6': {
-      def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
-      print "Finished 3.6"
-    },
-    '3.5': {
-      def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
-      print "Finished 3.5"
-    },
-    '3.4': {
-      def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
-      print "Finished 3.4"
-    },
-    '202101': {
-      def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'), latest: true, dockerfile: './Dockerfile_multi', rVersionAlt: '3.6.2', pyVersion: '3.7.3', pyVersionAlt: '3.6.7', rRepoAlt: buildRRepo('904477'), tag: "${RSPVersion}-202101", gossVars: 'goss_vars.yaml')
-      print "Finished 202101"
-    }
+            '4.1': {
+                def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'))
+                print "Finished 4.0"
+            },
+            '4.0': {
+              def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'))
+              print "Finished 4.0"
+            },
+            '3.6': {
+              def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
+              print "Finished 3.6"
+            },
+            '3.5': {
+              def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
+              print "Finished 3.5"
+            },
+            '3.4': {
+              def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+              print "Finished 3.4"
+            },
+            '202108': {
+              def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.0.3', pyVersion: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('1363722'), tag: "${RSPVersion}-202108", gossVars: 'goss_vars.yaml')
+              print "Finished 202108"
+            }
   }
   stage('finish') {
     node('docker') {
