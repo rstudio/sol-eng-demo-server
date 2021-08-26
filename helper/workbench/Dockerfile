@@ -126,6 +126,11 @@ RUN mkdir -p /startup/custom/ \
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY startup/* /startup/base/
 
+# add limelm certs 
+COPY *.crt /var/tmp/
+RUN cp -v /var/tmp/*.crt /usr/local/share/ca-certificates/ && \
+    update-ca-certificates
+
 EXPOSE 8787/tcp
 
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

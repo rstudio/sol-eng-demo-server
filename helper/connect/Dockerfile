@@ -225,6 +225,11 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+# add limelm certs 
+COPY *.crt /var/tmp/
+RUN cp -v /var/tmp/*.crt /usr/local/share/ca-certificates/ && \
+    update-ca-certificates
+
 EXPOSE 3939/tcp
 ENV RSC_LICENSE ""
 ENV RSC_LICENSE_SERVER ""
