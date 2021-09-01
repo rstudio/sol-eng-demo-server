@@ -32,6 +32,8 @@ def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo, def gossV
     node('docker') {
     checkout scm
 
+    def rspSafeVersion = rspVersion.replaceAll("\\+", "--")
+
     if (!args) {
       // create dummy map so lookups do not fail
       args = [dummy: true]
@@ -54,7 +56,7 @@ def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo, def gossV
     print "Using Alternate Arguments: ${altArgs}"
 
     if (!args.tag) {
-      tag = "${rspVersion}-${minorRVersion}"
+      tag = "${rspSafeVersion}-${minorRVersion}"
     } else {
       tag = args.tag
     }
@@ -106,7 +108,9 @@ ansiColor('xterm') {
     node('docker') {
       checkout scm
       RSPVersion = readFile("rsp-version.txt").trim()
+      RSPSafeVersion = RSPVersion.replaceAll("\\+", "--")
       print "Building RSP version: ${RSPVersion}"
+      print "Using Safe RSP version for a tag: ${RSPSafeVersion}"
     }
   }
   stage('build') {
@@ -132,7 +136,7 @@ ansiColor('xterm') {
                     checkout scm
                     def launcher_image = pullBuildPush(
                             image_name: 'launcher',
-                            image_tag: "${RSPVersion}",
+                            image_tag: "${RSPSafeVersion}",
                             build_args: "--build-arg RSP_VERSION=${RSPVersion}",
                             // can use this to invalidate the cache if needed
                             // cache_tag: 'none',
@@ -150,7 +154,7 @@ ansiColor('xterm') {
                     checkout scm
                     def workbench_image = pullBuildPush(
                             image_name: 'workbench',
-                            image_tag: "${RSPVersion}",
+                            image_tag: "${RSPSafeVersion}",
                             build_args: "--build-arg RSP_VERSION=${RSPVersion}",
                             // can use this to invalidate the cache if needed
                             // cache_tag: 'none',
@@ -201,7 +205,7 @@ ansiColor('xterm') {
               print "Finished 3.4"
             },
             '202108': {
-              def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.0.3', pyVersion: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('1363722'), tag: "${RSPVersion}-202108", gossVars: 'goss_vars.yaml')
+              def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.0.3', pyVersion: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('1363722'), tag: "${RSPSafeVersion}-202108", gossVars: 'goss_vars.yaml')
               print "Finished 202108"
             }
   }

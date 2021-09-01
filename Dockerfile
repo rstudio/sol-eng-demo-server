@@ -17,13 +17,14 @@ RUN apt-get update -y && \
     wget
 
 # Install RStudio Server Pro (for session) --------------------------------------------------#
-ARG RSP_VERSION=1.4.1717-3
+ARG RSP_VERSION=2021.09.0-preview+340.pro1
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
-    && curl -O ${RSP_DOWNLOAD_URL}/rstudio-workbench-${RSP_VERSION}-amd64.deb \
-    && gdebi --non-interactive rstudio-workbench-${RSP_VERSION}-amd64.deb \
-    && rm rstudio-workbench-${RSP_VERSION}-amd64.deb \
+    && RSP_VERSION_URL=`echo -n "${RSP_VERSION}" | sed 's/+/%2B/g'` \
+    && curl -o rstudio-workbench.deb ${RSP_DOWNLOAD_URL}/rstudio-workbench-${RSP_VERSION_URL}-amd64.deb \
+    && gdebi --non-interactive rstudio-workbench.deb \
+    && rm rstudio-workbench.deb \
     # && apt-get remove gdebi-core -y \
     && apt-get autoremove -y \
     && apt-get clean \

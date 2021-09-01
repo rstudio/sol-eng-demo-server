@@ -1,10 +1,10 @@
-RSP_VERSION ?= 1.4.1717-3
+RSP_VERSION ?= 2021.09.0-preview+340.pro1
 CODE_SERVER_VERSION ?= 3.2.0
 
 update-versions:  ## Update the version files for all products
 	@sed -i '' "s/^.*/${RSP_VERSION}/g" rsp-version.txt
 	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" Dockerfile
-	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" Dockerfile_multi
+	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" multi.Dockerfile
 	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" helper/launcher/Dockerfile
 	@sed -i '' "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION=${RSP_VERSION}/g" helper/workbench/Dockerfile
 
