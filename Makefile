@@ -1,4 +1,4 @@
-RSP_VERSION ?= 2021.09.0-preview+340
+RSP_VERSION ?= 2021.09.0-preview+340.pro1
 CODE_SERVER_VERSION ?= 3.2.0
 
 update-versions:  ## Update the version files for all products
