@@ -238,12 +238,10 @@ RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_ju
 # Install Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION=3.7.3
-COPY ./requirements.txt /opt/python/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
     /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION}/bin/pip install -r /opt/python/requirements.txt && \
     rm -rf Miniconda3-*-Linux-x86_64.sh && \
     /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
@@ -253,12 +251,10 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 # Install Alt Python --------------------------------------------------------------#
 
 ARG PYTHON_VERSION_ALT=3.6.7
-COPY ./requirements.txt /opt/python/requirements.txt
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_ALT} && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/conda install -y python==${PYTHON_VERSION_ALT} && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/pip install -r /opt/python/requirements.txt && \
     rm -rf Miniconda3-*-Linux-x86_64.sh && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/python -m ipykernel install --name py${PYTHON_VERSION_ALT} --display-name "Python ${PYTHON_VERSION_ALT}"
 
