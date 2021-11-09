@@ -98,7 +98,7 @@ RUN groupadd -g 998 -r rstudio-server && \
     useradd -g 998 -u 998 -r rstudio-server
 
 # Install RStudio Server Pro --------------------------------------------------#
-ARG RSP_VERSION=2021.09.0-preview+340.pro1
+ARG RSP_VERSION=2021.09.0+351.pro6
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
