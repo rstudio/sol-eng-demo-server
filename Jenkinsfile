@@ -108,7 +108,7 @@ ansiColor('xterm') {
     node('docker') {
       checkout scm
       RSPVersion = readFile("rsp-version.txt").trim()
-      RSPSafeVersion = RSPVersion.replaceAll("\\+", "--")
+      RSPSafeVersion = RSPVersion.replaceAll("\\+", "-")
       print "Building RSP version: ${RSPVersion}"
       print "Using Safe RSP version for a tag: ${RSPSafeVersion}"
     }
