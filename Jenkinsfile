@@ -32,7 +32,7 @@ def buildImage(Map args=null, def rspVersion, def rVersion, def rRepo, def gossV
     node('docker') {
     checkout scm
 
-    def rspSafeVersion = rspVersion.replaceAll("\\+", "--")
+    def rspSafeVersion = rspVersion.replaceAll("\\+", "-")
 
     if (!args) {
       // create dummy map so lookups do not fail
