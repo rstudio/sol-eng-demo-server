@@ -185,7 +185,7 @@ ansiColor('xterm') {
                 }
             },
             '4.1': {
-                def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'))
+                def image = buildImage(RSPVersion, '4.1.2', buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'))
                 print "Finished 4.0"
             },
             '4.0': {
@@ -204,9 +204,9 @@ ansiColor('xterm') {
               def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
               print "Finished 3.4"
             },
-            '202108': {
-              def image = buildImage(RSPVersion, '4.1.1', buildRRepo('5046957'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.0.3', pyVersion: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('1363722'), tag: "${RSPSafeVersion}-202108", gossVars: 'goss_vars.yaml')
-              print "Finished 202108"
+            '202111': {
+              def image = buildImage(RSPVersion, '4.1.2', buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.0.3', pyVersion: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('1363722'), tag: "${RSPSafeVersion}-202111", gossVars: 'goss_vars.yaml')
+              print "Finished 202111"
             }
   }
   stage('finish') {
