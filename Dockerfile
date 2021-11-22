@@ -139,7 +139,25 @@ RUN apt-get update -y && \
     vim \
     psmisc \
     qpdf \
-    tree
+    tree \
+    # pyenv dependencies
+    make \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev
 
 
 # Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
