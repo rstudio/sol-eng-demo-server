@@ -17,7 +17,7 @@ RUN apt-get update -y && \
     wget
 
 # Install RStudio Server Pro (for session) --------------------------------------------------#
-ARG RSP_VERSION=2021.09.0+351.pro6
+ARG RSP_VERSION=2021.09.2+382.pro1
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
