@@ -7,7 +7,6 @@ LABEL maintainer="sol-eng@rstudio.com"
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     curl \
-    gdebi \
     libcurl4-gnutls-dev \
     libssl1.0.0 \
     libssl-dev \
@@ -263,7 +262,7 @@ RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi
+    DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
 ARG DRIVERS_VERSION=1.8.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
