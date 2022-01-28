@@ -7,7 +7,6 @@ LABEL maintainer="sol-eng@rstudio.com"
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     curl \
-    gdebi \
     libcurl4-gnutls-dev \
     libssl1.0.0 \
     libssl-dev \
@@ -281,7 +280,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi
+    DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
 ARG DRIVERS_VERSION=1.8.0
 RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
