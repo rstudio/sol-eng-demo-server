@@ -233,7 +233,7 @@ RUN /opt/R/${R_VERSION_ALT}/bin/R -e "source(\"/opt/R/${R_VERSION_ALT}/lib/pkg_i
 
 # Install jupyter -------------------------------------------------------------#
 
-ARG JUPYTER_VERSION=3.6.9
+ARG JUPYTER_VERSION=3.9.6
 RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
     bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/jupyter && \
     /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
