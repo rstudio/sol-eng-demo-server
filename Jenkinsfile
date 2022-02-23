@@ -168,23 +168,23 @@ ansiColor('xterm') {
                 }
             },
             '4.1': {
-                def image = buildImage(RSPVersion, '4.1.2', buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'))
+                def image = buildImage(RSPVersion, '4.1.2', buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), pyVersion: '3.9.6')
                 print "Finished 4.0"
             },
             '4.0': {
-              def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'))
+              def image = buildImage(RSPVersion, '4.0.3', buildRRepo('1363722'), pyVersion: '3.9.6')
               print "Finished 4.0"
             },
             '3.6': {
-              def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'))
+              def image = buildImage(RSPVersion, '3.6.1', buildRRepo('1654'), pyVersion: '3.9.6')
               print "Finished 3.6"
             },
             '3.5': {
-              def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'))
+              def image = buildImage(RSPVersion, '3.5.3', buildRRepo('1408'), pyVersion: '3.9.6')
               print "Finished 3.5"
             },
             '3.4': {
-              def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'))
+              def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'), pyVersion: '3.9.6')
               print "Finished 3.4"
             },
             '202111': {
