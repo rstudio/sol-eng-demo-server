@@ -252,14 +252,6 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 RUN rstudio-server install-vs-code /opt/code-server
     # TODO: rstudio-server install-vs-code-ext
 
-
-RUN curl -o Ikuyadeu.r-1.1.0.vsix.gz -L https://rstd.io/vs-code-r-ext  && \
-    gunzip Ikuyadeu.r-1.1.0.vsix.gz && \
-    /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension Ikuyadeu.r-1.1.0.vsix && \
-    rm -rf Ikuyadeu.r-1.1.0.vsix.gz Ikuyadeu.r-1.1.0.vsix
-
-RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension ms-python.python
-
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \

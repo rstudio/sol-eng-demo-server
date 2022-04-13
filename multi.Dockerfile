@@ -303,13 +303,6 @@ RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\"
 RUN rstudio-server install-vs-code /opt/code-server
     # TODO: rstudio-server install-vs-code-ext
 
-RUN curl -o Ikuyadeu.r-1.1.0.vsix.gz -L https://rstd.io/vs-code-r-ext  && \
-    gunzip Ikuyadeu.r-1.1.0.vsix.gz && \
-    /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension Ikuyadeu.r-1.1.0.vsix && \
-    rm -rf Ikuyadeu.r-1.1.0.vsix.gz Ikuyadeu.r-1.1.0.vsix
-
-RUN /opt/code-server/code-server --extensions-dir /opt/code-server/extensions --install-extension ms-python.python
-
 # Locale configuration --------------------------------------------------------#
 
 RUN apt-get update -y && \
