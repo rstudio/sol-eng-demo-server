@@ -1,5 +1,4 @@
-RSP_VERSION ?= 2022.02.1+461.pro1
-CODE_SERVER_VERSION ?= 3.2.0
+RSP_VERSION ?= 2022.02.2+482.pro1
 
 update-versions:  ## Update the version files for all products
 	@sed -i '' "s/^.*/${RSP_VERSION}/g" rsp-version.txt
