@@ -192,7 +192,7 @@ ansiColor('xterm') {
               print "Finished 3.4"
             },
             '202205': {
-              def image = buildImage(RSPVersion, '4.2.0', buildRRepo('2022-05-12+Y3JhbiwxMDo1MzA5LDk6ODEyMzg3NTs4QURDRjBGNQ'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.1.2', rVersionAlt: '4.0.3', pyVersion: '3.10.4', pyVersionAlt: '3.9.6', pyVersionAlt: '3.7.5', rRepoAlt: buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), tag: "${RSPSafeVersion}-202205", gossVars: 'goss_vars.yaml')
+              def image = buildImage(RSPVersion, '4.2.0', buildRRepo('2022-05-12+Y3JhbiwxMDo1MzA5LDk6ODEyMzg3NTs4QURDRjBGNQ'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.1.2', pyVersion: '3.10.4', pyVersionAlt: '3.9.6', rRepoAlt: buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), tag: "${RSPSafeVersion}-202205", gossVars: 'goss_vars.yaml')
               print "Finished 202205"
             }
   }
