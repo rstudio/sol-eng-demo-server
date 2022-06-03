@@ -258,7 +258,7 @@ RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
 ARG DRIVERS_VERSION=1.8.0
-RUN curl -O https://drivers.rstudio.org/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
+RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini
