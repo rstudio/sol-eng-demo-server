@@ -1,4 +1,4 @@
-RSP_VERSION ?= 2022.07.0-preview-545.pro3
+RSP_VERSION ?= 2022.07.0-548.pro5
 
 update-versions:  ## Update the version files for all products
 	@sed -i '' "s/^.*/${RSP_VERSION}/g" rsp-version.txt
