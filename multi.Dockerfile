@@ -158,32 +158,6 @@ RUN apt-get update -y && \
     libffi-dev \
     liblzma-dev
 
-# Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     apt-transport-https \
-#     gnupg \
-#     lsb-release
-
-# RUN wget -O /usr/share/keyrings/apache-arrow-keyring.gpg https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-keyring.gpg
-# # RUN tee /etc/apt/sources.list.d/apache-arrow.list <<APT_LINE \
-# #     deb [arch=amd64 signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     deb-src [signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     APT_LINE
-
-
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     libarrow-dev \
-#     libarrow-glib-dev \
-#     libarrow-flight-dev \
-#     libplasma-dev \
-#     libplasma-glib-dev \
-#     libgandiva-dev \
-#     libgandiva-glib-dev \
-#     libparquet-dev \
-#     libparquet-glib-dev
-
 
 # Install R -------------------------------------------------------------------#
 
