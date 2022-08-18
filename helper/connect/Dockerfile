@@ -157,39 +157,28 @@ RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION_ALT}_1_amd6
 
 # Install Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION_2=3.8.3
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_2} && \
-    /opt/python/${PYTHON_VERSION_2}/bin/conda install -y python==${PYTHON_VERSION_2} && \
-    /opt/python/${PYTHON_VERSION_2}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh
+ARG PYTHON_VERSION=3.7.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION}_1_amd64.deb
 
-ENV PATH="/opt/python/${PYTHON_VERSION_2}/bin:${PATH}"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION_2}/bin/python"
+ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 
 # Install Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION=3.7.3
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh
+ARG PYTHON_VERSION_2=3.8.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION_2}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION_2}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION_2}_1_amd64.deb
 
-ENV PATH="/opt/python/${PYTHON_VERSION}/bin:${PATH}"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
+ENV PATH="/opt/python/${PYTHON_VERSION_2}/bin:${PATH}"
 
 # Install Alt Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION_ALT=3.6.7
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_ALT} && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/conda install -y python==${PYTHON_VERSION_ALT} && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/pip install virtualenv && \
-    /opt/python/${PYTHON_VERSION_2}/bin/pip install 'setuptools>40.8.0' && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh
+ARG PYTHON_VERSION_ALT=3.9.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION_ALT}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION_ALT}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION_ALT}_1_amd64.deb
 
 # Runtime settings ------------------------------------------------------------#
 ARG TINI_VERSION=0.18.0
@@ -204,7 +193,7 @@ RUN groupadd -g 998 -r rstudio-connect && \
     useradd -g 998 -u 998 -r rstudio-connect
 
 # Download RStudio Connect -----------------------------------------------------#
-ARG RSC_VERSION=1.8.6.6
+ARG RSC_VERSION=2022.08.0
 RUN apt-get update --fix-missing \
     && apt-get install -y gpg dpkg-sig \
     && curl -LO https://cdn.rstudio.com/connect/installer/installer-latest.sh \
