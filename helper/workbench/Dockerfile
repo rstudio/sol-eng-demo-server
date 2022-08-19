@@ -32,10 +32,10 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Install R -------------------------------------------------------------------#
-ARG R_DISTRIBUTION=ubuntu-2004
+ARG DISTRIBUTION=ubuntu-2004
 ARG R_VERSION=4.0.3
 ARG R_INSTALLER=r-${R_VERSION}_1_amd64.deb
-RUN curl -fsSL -O https://cdn.rstudio.com/r/${R_DISTRIBUTION}/pkgs/${R_INSTALLER} && \
+RUN curl -fsSL -O https://cdn.rstudio.com/r/${DISTRIBUTION}/pkgs/${R_INSTALLER} && \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -f -y ./${R_INSTALLER} && \
@@ -43,30 +43,29 @@ RUN curl -fsSL -O https://cdn.rstudio.com/r/${R_DISTRIBUTION}/pkgs/${R_INSTALLER
     rm -rf /var/lib/apt/lists/*
 
 # Install Python  -------------------------------------------------------------#
-ARG MINICONDA_VERSION=4.7.12.1
-ARG PYTHON_VERSION=3.8.3
+ARG PYTHON_VERSION=3.9.13
+ARG PYTHON_INSTALLER=python-${PYTHON_VERSION}_1_amd64.deb
+RUN curl -fsSL -O https://cdn.rstudio.com/python/${DISTRIBUTION}/pkgs/${PYTHON_INSTALLER} && \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -f -y ./${PYTHON_INSTALLER} && \
+    rm ${PYTHON_INSTALLER} && \
+    rm -rf /var/lib/apt/lists/*
 
-# The documented approach uses a particular miniconda install script version
-# to obtain the desired Python version. We are first installing miniconda and
-# then asking it to install different Python versions.
+RUN /opt/python/${PYTHON_VERSION}/bin/pip3 install \
+    --upgrade pip setuptools wheel && \ 
+    /opt/python/${PYTHON_VERSION}/bin/pip3 install \
+    jupyter \
+    jupyterlab \
+    workbench_jupyterlab \
+    rsp_jupyter \
+    rsconnect_jupyter \
+    rsconnect_python && \
+    ln -s /opt/python/${PYTHON_VERSION}/bin/jupyter /usr/local/bin/jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
-RUN curl -fsSL -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh \
-    && chmod 755 miniconda.sh \
-    && ./miniconda.sh -b -p /opt/miniconda \
-    && /opt/miniconda/bin/conda create --quiet --yes --prefix /opt/python/${PYTHON_VERSION} --channel conda-forge python=${PYTHON_VERSION} \
-    && rm -f miniconda.sh \
-    # remove miniconda too, for size
-    && rm -rf /opt/miniconda
+# Install RSP/RSC Notebook Extensions --------------------#
 
-# Install other Python PyPi packages
-RUN /opt/python/${PYTHON_VERSION}/bin/pip install --no-cache-dir \
-                pip==20.0.2 \
-                jupyter==1.0.0 \
-                'jupyterlab<3.0.0' \
-                rsp_jupyter \
-                rsconnect_jupyter
-
-# Install Jupyter extensions
 RUN /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
     /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
     /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
