@@ -177,43 +177,36 @@ ARG R_REPO_LATEST='https://colorado.rstudio.com/rspm/cran/__linux__/bionic/lates
 RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
 	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
 
+# Install Python --------------------------------------------------------------#
 
-# Install jupyter -------------------------------------------------------------#
+ARG PYTHON_VERSION=3.9.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION}_1_amd64.deb
 
-ARG JUPYTER_VERSION=3.9.6
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/jupyter && \
-    /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
-    rm -rf Miniconda3-latest-Linux-x86_64.sh && \
-    /opt/python/jupyter/bin/pip install \
+
+RUN /opt/python/${PYTHON_VERSION}/bin/pip3 install \
     jupyter \
     jupyterlab \
+    workbench_jupyterlab \
     rsp_jupyter \
-    rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
-    /opt/python/jupyter/bin/pip uninstall -y ipykernel
+    rsconnect_jupyter \
+    rsconnect_python && \
+    ln -s /opt/python/${PYTHON_VERSION}/bin/jupyter /usr/local/bin/jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 # Install RSP/RSC Notebook Extensions --------------------#
 
-RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
+RUN /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
 
-# Install Python --------------------------------------------------------------#
-
-ARG PYTHON_VERSION=3.7.3
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv jupyter && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh && \
-    /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV SHELL="/bin/bash"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python3"
 
 # Install VSCode code-server --------------------------------------------------#
 RUN rstudio-server install-vs-code /opt/code-server
