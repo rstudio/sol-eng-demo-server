@@ -184,6 +184,8 @@ RUN apt-get update -y && \
 #     libparquet-dev \
 #     libparquet-glib-dev
 
+# Link Quarto -------------------------------------------------------------------#
+RUN ln -s /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin/quarto
 
 # Install R -------------------------------------------------------------------#
 
