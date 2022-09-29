@@ -158,6 +158,9 @@ RUN apt-get update -y && \
     libffi-dev \
     liblzma-dev
 
+# Link Quarto -------------------------------------------------------------------#
+RUN ln -s /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin/quarto
+
 # Install R -------------------------------------------------------------------#
 
 ARG R_VERSION=3.6.1
