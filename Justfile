@@ -6,7 +6,7 @@ sed_vars := if os() == "macos" { "-i ''" } else { "-i" }
 
 BUILDX_PATH := ""
 
-RSW_VERSION := "2022.07.1-554.pro3"
+RSW_VERSION := "2022.07.2-576.pro12"
 
 # just RSW_VERSION=1.2.3 update-rsw-versions
 update-versions:
