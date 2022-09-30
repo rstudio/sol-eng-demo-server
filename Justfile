@@ -1,7 +1,6 @@
 set positional-arguments
 
-vars := "-i ''"
-
+cmd_vars := "-i ''"
 sed_vars := if os() == "macos" { "-i ''" } else { "-i" }
 
 BUILDX_PATH := ""
@@ -12,6 +11,10 @@ RSW_VERSION := "2022.07.2-576.pro12"
 update-versions:
   #!/usr/bin/env bash
   set -euxo pipefail
+  if [[ `echo "{{ RSW_VERSION }}" | grep '+'` ]]; then
+    echo "ERROR: Make sure that there is no '+' sign in the version you define. Got: {{ RSW_VERSION }}"
+    exit 1
+  fi
     sed {{ sed_vars }} "s/^.*/{{ RSW_VERSION }}/g" rsp-version.txt
     sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" Dockerfile
     sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" multi.Dockerfile
