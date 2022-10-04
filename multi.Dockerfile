@@ -158,32 +158,6 @@ RUN apt-get update -y && \
     libffi-dev \
     liblzma-dev
 
-# Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     apt-transport-https \
-#     gnupg \
-#     lsb-release
-
-# RUN wget -O /usr/share/keyrings/apache-arrow-keyring.gpg https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-keyring.gpg
-# # RUN tee /etc/apt/sources.list.d/apache-arrow.list <<APT_LINE \
-# #     deb [arch=amd64 signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     deb-src [signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     APT_LINE
-
-
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     libarrow-dev \
-#     libarrow-glib-dev \
-#     libarrow-flight-dev \
-#     libplasma-dev \
-#     libplasma-glib-dev \
-#     libgandiva-dev \
-#     libgandiva-glib-dev \
-#     libparquet-dev \
-#     libparquet-glib-dev
-
 # Link Quarto -------------------------------------------------------------------#
 RUN ln -s /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin/quarto
 
@@ -233,38 +207,25 @@ RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO_ALT}\"), \"HTTPUserAgent\" = \
 # need to install packages from list of packages...
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "source(\"/opt/R/${R_VERSION_ALT}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION_ALT}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION_ALT}/lib/R/library\")"
 
-# Install jupyter -------------------------------------------------------------#
-
-ARG JUPYTER_VERSION=3.9.6
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/jupyter && \
-    /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh && \
-    /opt/python/jupyter/bin/pip install \
-    jupyter \
-    jupyterlab \
-    rsp_jupyter \
-    rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
-    /opt/python/jupyter/bin/pip uninstall -y ipykernel
-
-# Install RSP/RSC Notebook Extensions --------------------#
-
-RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
 
 # Install Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION=3.7.3
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv jupyter && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh && \
-    /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
+ARG PYTHON_VERSION=3.9.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION}_1_amd64.deb
+
+RUN /opt/python/${PYTHON_VERSION}/bin/pip3 install \
+    --upgrade pip setuptools wheel && \ 
+    /opt/python/${PYTHON_VERSION}/bin/pip3 install \
+    jupyter \
+    jupyterlab \
+    workbench_jupyterlab \
+    rsp_jupyter \
+    rsconnect_jupyter \
+    rsconnect_python && \
+    ln -s /opt/python/${PYTHON_VERSION}/bin/jupyter /usr/local/bin/jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
 ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV SHELL="/bin/bash"
@@ -272,20 +233,23 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
 # Install Alt Python --------------------------------------------------------------#
 
-ARG PYTHON_VERSION_ALT=3.6.7
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION_ALT} && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/conda install -y python==${PYTHON_VERSION_ALT} && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/pip install virtualenv jupyter && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh && \
-    /opt/python/${PYTHON_VERSION_ALT}/bin/python -m ipykernel install --name py${PYTHON_VERSION_ALT} --display-name "Python ${PYTHON_VERSION_ALT}"
+ARG PYTHON_VERSION_ALT=3.8.13
+RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERSION_ALT}_1_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive python-${PYTHON_VERSION_ALT}_1_amd64.deb && \
+    rm -f ./python-${PYTHON_VERSION_ALT}_1_amd64.deb
+
+RUN /opt/python/${PYTHON_VERSION_ALT}/bin/pip3 install \
+    --upgrade pip setuptools wheel && \ 
+    /opt/python/${PYTHON_VERSION_ALT}/bin/pip3 install \
+    jupyter && \
+    /opt/python/${PYTHON_VERSION_ALT}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION_ALT} --display-name "Python ${PYTHON_VERSION_ALT}"
 
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
-ARG DRIVERS_VERSION=1.8.0
+ARG DRIVERS_VERSION=2021.10.0
 RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \

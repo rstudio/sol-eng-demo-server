@@ -114,60 +114,7 @@ ansiColor('xterm') {
     }
   }
   stage('build') {
-    parallel 'connect': {
-      node('docker') {
-        checkout scm
-        def connect_image = pullBuildPush(
-              image_name: 'connect',
-              image_tag: '1.8.6.6',
-              // can use this to invalidate the cache if needed
-              // cache_tag: 'none',
-              latest_tag: true,
-              dockerfile: './helper/connect/Dockerfile',
-              docker_context: './helper/connect/',
-              registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
-              push: pushImage
-            )
-        print "Finished connect"
-      }
-    },
-            'launcher': {
-                node('docker') {
-                    checkout scm
-                    def launcher_image = pullBuildPush(
-                            image_name: 'launcher',
-                            image_tag: "${RSPSafeVersion}",
-                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
-                            // can use this to invalidate the cache if needed
-                            // cache_tag: 'none',
-                            latest_tag: false,
-                            dockerfile: './helper/launcher/Dockerfile',
-                            docker_context: './helper/launcher/',
-                            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
-                            push: pushImage
-                    )
-                    print "Finished launcher"
-                }
-            },
-            'workbench': {
-                node('docker') {
-                    checkout scm
-                    def workbench_image = pullBuildPush(
-                            image_name: 'workbench',
-                            image_tag: "${RSPSafeVersion}",
-                            build_args: "--build-arg RSP_VERSION=${RSPVersion}",
-                            // can use this to invalidate the cache if needed
-                            // cache_tag: 'none',
-                            latest_tag: false,
-                            dockerfile: './helper/workbench/Dockerfile',
-                            docker_context: './helper/workbench/',
-                            registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
-                            push: pushImage
-                    )
-                    print "Finished workbench"
-                }
-            },
-            '4.2': {
+    parallel '4.2': {
                 def image = buildImage(RSPVersion, '4.2.0', buildRRepo('2022-05-12+Y3JhbiwxMDo1MzA5LDk6ODEyMzg3NTs4QURDRjBGNQ'), pyVersion: '3.10.4')
                 print "Finished 4.2"
             },
@@ -191,9 +138,9 @@ ansiColor('xterm') {
               def image = buildImage(RSPVersion, '3.4.4', buildRRepo('324'), pyVersion: '3.9.6')
               print "Finished 3.4"
             },
-            '202206': {
-              def image = buildImage(RSPVersion, '4.2.0', buildRRepo('2022-06-28+Y3JhbiwxMDo1MzA5LDk6OTk1ODk5Njs3OTA1Q0I0QQ'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.1.2', pyVersion: '3.10.4', pyVersionAlt: '3.9.6', rRepoAlt: buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), tag: "${RSPSafeVersion}-202206", gossVars: 'goss_vars.yaml')
-              print "Finished 202206"
+            '202210': {
+              def image = buildImage(RSPVersion, '4.2.0', buildRRepo('2022-09-29+Y3JhbiwxMDo1MzA5LDk6MTE1MDU5MDU7NjZFM0IyNA'), latest: true, dockerfile: './multi.Dockerfile', rVersionAlt: '4.1.2', pyVersion: '3.10.4', pyVersionAlt: '3.9.6', rRepoAlt: buildRRepo('2021-11-12+MTc6NTg4NzczOSwxMDo1MzA5LDk6NTk2NTg0NTsyNENERDc2OQ'), tag: "${RSPSafeVersion}-202210", gossVars: 'goss_vars.yaml')
+              print "Finished 202210"
             }
   }
   stage('finish') {
