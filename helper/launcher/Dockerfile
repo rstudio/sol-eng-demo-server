@@ -33,7 +33,7 @@ RUN chmod +x /usr/local/bin/startup.sh
 COPY conf/* /etc/rstudio/
 
 # Install RStudio Server Pro (for launcher) --------------------------------------------------#
-ARG RSP_VERSION=2022.07.1-554.pro3
+ARG RSP_VERSION=2022.07.2-576.pro12
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
