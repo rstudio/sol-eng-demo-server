@@ -279,3 +279,13 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV TZ UTC
 ENV R_BUILD_TAR /bin/tar
+
+# RStudio Package Manager Remote CLI -------------------------------------------#
+
+ARG PACKAGEMANAGER_TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwYWNrYWdlbWFuYWdlciIsImp0aSI6IjJiZTI1OGNkLWU3ZTUtNDgzMi05ZDQ2LWUxYWMzNjRhNmU0OSIsImlhdCI6MTY2NTU3OTcwOSwiaXNzIjoicGFja2FnZW1hbmFnZXIiLCJzY29wZXMiOnsic291cmNlcyI6IjJlZjhhZmRiLTBiMDMtNDk0MC1iOTBlLTFjMjE1MDgxMzYyMyJ9fQ.MoTFhE6ipjzqjVvCkzvXp7J9JiOdaMJhqAhqmY-7V00'
+ARG PACKAGEMANAGER_ADDRESS='https://colorado.rstudio.com'
+RUN curl -fOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download"
+RUN cp ./rspm /usr/local/bin/rspm
+RUN chmod +x /usr/local/bin/rspm
+
+
