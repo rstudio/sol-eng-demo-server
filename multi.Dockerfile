@@ -227,6 +227,12 @@ RUN /opt/python/${PYTHON_VERSION}/bin/pip3 install \
     ln -s /opt/python/${PYTHON_VERSION}/bin/jupyter /usr/local/bin/jupyter && \
     /opt/python/${PYTHON_VERSION}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
 
+RUN /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
+    /opt/python/${PYTHON_VERSION}/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
+
 ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV SHELL="/bin/bash"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
