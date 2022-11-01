@@ -162,7 +162,7 @@ RUN apt-get update -y && \
 RUN ln -s /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin/quarto
 
 # Install R -------------------------------------------------------------------#
-
+#Default R Version but gets overwritten by values passed in from Jenkins Build Process
 ARG R_VERSION=3.6.2
 RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION}_1_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive r-${R_VERSION}_1_amd64.deb && \
@@ -207,6 +207,12 @@ RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO_ALT}\"), \"HTTPUserAgent\" = \
 # need to install packages from list of packages...
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "source(\"/opt/R/${R_VERSION_ALT}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION_ALT}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION_ALT}/lib/R/library\")"
 
+# Install r-versions configuration for rJava ----------------------------------#
+RUN mkdir -p /mnt/dynamic/rstudio \
+    && echo -e "Path: /opt/R/${R_VERSION}\nScript: /opt/R/${R_VERSION}/lib/R/etc/ldpaths" > \
+	/mnt/dynamic/rstudio/r-versions \
+    && echo -e "\nPath: /opt/R/${R_VERSION_ALT}\nScript: /opt/R/${R_VERSION_ALT}/lib/R/etc/ldpaths" >> \
+    	/mnt/dynamic/rstudio/r-versions
 
 # Install Python --------------------------------------------------------------#
 
