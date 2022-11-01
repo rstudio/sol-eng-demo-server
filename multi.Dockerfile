@@ -209,9 +209,9 @@ RUN /opt/R/${R_VERSION_ALT}/bin/R -e "source(\"/opt/R/${R_VERSION_ALT}/lib/pkg_i
 
 # Install r-versions configuration for rJava ----------------------------------#
 RUN mkdir -p /mnt/dynamic/rstudio \
-    && echo -e "Path: /opt/R/${R_VERSION}\nScript: /opt/R/${R_VERSION}/lib/R/etc/ldpaths" > \
+    && echo "Path: /opt/R/${R_VERSION}\nScript: /opt/R/${R_VERSION}/lib/R/etc/ldpaths" > \
 	/mnt/dynamic/rstudio/r-versions \
-    && echo -e "\nPath: /opt/R/${R_VERSION_ALT}\nScript: /opt/R/${R_VERSION_ALT}/lib/R/etc/ldpaths" >> \
+    && echo "\nPath: /opt/R/${R_VERSION_ALT}\nScript: /opt/R/${R_VERSION_ALT}/lib/R/etc/ldpaths" >> \
     	/mnt/dynamic/rstudio/r-versions
 
 # Install Python --------------------------------------------------------------#
