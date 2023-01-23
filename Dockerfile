@@ -260,7 +260,7 @@ RUN rstudio-server install-vs-code /opt/code-server
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
-ARG DRIVERS_VERSION=1.8.0
+ARG DRIVERS_VERSION=2022.11.0
 RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
