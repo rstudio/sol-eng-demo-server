@@ -278,7 +278,8 @@ RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 
 # Install VSCode code-server --------------------------------------------------#
-RUN rstudio-server install-vs-code /opt/code-server
+RUN rstudio-server configure-vs-code /opt/code-server
+# RUN rstudio-server install-vs-code /opt/code-server
     # TODO: rstudio-server install-vs-code-ext
 
 # Locale configuration --------------------------------------------------------#
