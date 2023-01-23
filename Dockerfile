@@ -252,7 +252,8 @@ ENV SHELL="/bin/bash"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
 # Install VSCode code-server --------------------------------------------------#
-RUN rstudio-server configure-vs-code /opt/code-server
+RUN rstudio-server configure-vs-code --extensions-dir /opt/code-server
+# RUN rstudio-server configure-vs-code /opt/code-server
 # RUN rstudio-server install-vs-code /opt/code-server
     # TODO: rstudio-server install-vs-code-ext
 
