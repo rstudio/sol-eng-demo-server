@@ -298,9 +298,8 @@ ENV R_BUILD_TAR /bin/tar
 
 ARG PACKAGEMANAGER_TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwYWNrYWdlbWFuYWdlciIsImp0aSI6Ijk1Y2RkMWU5LTIzOWEtNDBiMS04MTY3LTM3NmU3NmMzY2Y5OSIsImlhdCI6MTY2NjgxOTg1NiwiaXNzIjoicGFja2FnZW1hbmFnZXIiLCJzY29wZXMiOnsic291cmNlcyI6ImNlYTQwMDA2LThiOTYtNDZlMi05NmNmLTVmNzAzNzU3OTM4NyJ9fQ.7yweKMFS2CJaNLcBJwaMebjMDk7YSRkjeXlSFpylL1I'
 ARG PACKAGEMANAGER_ADDRESS='https://colorado.posit.co/rspm'
-RUN curl -fOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download" --output /usr/local/bin/rspm
-# RUN curl -fOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download" 
-# RUN cp ./rspm /usr/local/bin/rspm
+# RUN curl -fOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download" --output /usr/local/bin/rspm
+RUN curl -fLOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download" 
+RUN cp ./rspm /usr/local/bin/rspm
 RUN chmod +x /usr/local/bin/rspm
-
 
