@@ -16,7 +16,7 @@ RUN apt-get update -y && \
     wget
 
 # Install RStudio Server Pro (for session) --------------------------------------------------#
-ARG RSP_VERSION=2022.07.2-576.pro12
+ARG RSP_VERSION=2022.12.0-353.pro20
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
@@ -261,7 +261,7 @@ RUN /opt/python/${PYTHON_VERSION_ALT}/bin/pip3 install \
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
-ARG DRIVERS_VERSION=2021.10.0
+ARG DRIVERS_VERSION=2022.11.0
 RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
@@ -277,10 +277,6 @@ RUN curl -O https://download.oracle.com/otn_software/linux/instantclient/191000/
 RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 RUN /opt/R/${R_VERSION_ALT}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
 
-# Install VSCode code-server --------------------------------------------------#
-RUN rstudio-server install-vs-code /opt/code-server
-    # TODO: rstudio-server install-vs-code-ext
-
 # Locale configuration --------------------------------------------------------#
 
 RUN apt-get update -y && \
@@ -295,9 +291,8 @@ ENV R_BUILD_TAR /bin/tar
 # RStudio Package Manager Remote CLI -------------------------------------------#
 
 ARG PACKAGEMANAGER_TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwYWNrYWdlbWFuYWdlciIsImp0aSI6Ijk1Y2RkMWU5LTIzOWEtNDBiMS04MTY3LTM3NmU3NmMzY2Y5OSIsImlhdCI6MTY2NjgxOTg1NiwiaXNzIjoicGFja2FnZW1hbmFnZXIiLCJzY29wZXMiOnsic291cmNlcyI6ImNlYTQwMDA2LThiOTYtNDZlMi05NmNmLTVmNzAzNzU3OTM4NyJ9fQ.7yweKMFS2CJaNLcBJwaMebjMDk7YSRkjeXlSFpylL1I'
-ARG PACKAGEMANAGER_ADDRESS='https://colorado.rstudio.com/rspm'
-RUN curl -fOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download"
+ARG PACKAGEMANAGER_ADDRESS='https://colorado.posit.co/rspm'
+RUN curl -fLOJH "Authorization: Bearer ${PACKAGEMANAGER_TOKEN}" "${PACKAGEMANAGER_ADDRESS}/__api__/download" 
 RUN cp ./rspm /usr/local/bin/rspm
 RUN chmod +x /usr/local/bin/rspm
-
 

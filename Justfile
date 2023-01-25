@@ -5,7 +5,7 @@ sed_vars := if os() == "macos" { "-i ''" } else { "-i" }
 
 BUILDX_PATH := ""
 
-RSW_VERSION := "2022.07.2-576.pro12"
+RSW_VERSION := "2022.12.0-353.pro20"
 
 # just RSW_VERSION=1.2.3 update-rsw-versions
 update-versions:
@@ -18,8 +18,6 @@ update-versions:
     sed {{ sed_vars }} "s/^.*/{{ RSW_VERSION }}/g" rsp-version.txt
     sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" Dockerfile
     sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" multi.Dockerfile
-    sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" helper/launcher/Dockerfile
-    sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" helper/workbench/Dockerfile
 
 # just vars
 vars:

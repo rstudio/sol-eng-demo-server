@@ -16,7 +16,7 @@ RUN apt-get update -y && \
     wget
 
 # Install RStudio Server Pro (for session) --------------------------------------------------#
-ARG RSP_VERSION=2022.07.2-576.pro12
+ARG RSP_VERSION=2022.12.0-353.pro20
 ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
 RUN apt-get update --fix-missing \
     && apt-get install -y gdebi-core \
@@ -251,16 +251,12 @@ ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV SHELL="/bin/bash"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
-# Install VSCode code-server --------------------------------------------------#
-RUN rstudio-server install-vs-code /opt/code-server
-    # TODO: rstudio-server install-vs-code-ext
-
 # Install RStudio Professional Drivers ----------------------------------------#
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
 
-ARG DRIVERS_VERSION=1.8.0
+ARG DRIVERS_VERSION=2022.11.0
 RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
     rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
