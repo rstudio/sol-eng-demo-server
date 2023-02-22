@@ -38,6 +38,8 @@ RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
     libxml2-dev \
+    #Add acl to aid in troubleshooting
+    acl \
     # these are other package system requirements, should uncomment and re-run
     subversion \
     lmodern \
