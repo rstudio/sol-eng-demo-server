@@ -38,6 +38,8 @@ RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
     libxml2-dev \
+    #Add acl to aid in troubleshooting
+    acl \
     # these are other package system requirements, should uncomment and re-run
     subversion \
     lmodern \
@@ -222,7 +224,7 @@ RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERS
     rm -f ./python-${PYTHON_VERSION}_1_amd64.deb
 
 RUN /opt/python/${PYTHON_VERSION}/bin/pip3 install \
-    --upgrade pip setuptools wheel && \ 
+    --upgrade pip setuptools wheel && \
     /opt/python/${PYTHON_VERSION}/bin/pip3 install \
     jupyter \
     jupyterlab \
@@ -251,7 +253,7 @@ RUN curl -O https://cdn.rstudio.com/python/ubuntu-1804/pkgs/python-${PYTHON_VERS
     rm -f ./python-${PYTHON_VERSION_ALT}_1_amd64.deb
 
 RUN /opt/python/${PYTHON_VERSION_ALT}/bin/pip3 install \
-    --upgrade pip setuptools wheel && \ 
+    --upgrade pip setuptools wheel && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/pip3 install \
     jupyter && \
     /opt/python/${PYTHON_VERSION_ALT}/bin/python3 -m ipykernel install --name py${PYTHON_VERSION_ALT} --display-name "Python ${PYTHON_VERSION_ALT}"
