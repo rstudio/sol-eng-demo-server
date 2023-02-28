@@ -36,6 +36,7 @@ EXPOSE 8788/tcp
 
 # Install additional system packages ------------------------------------------#
 # Updating to a newer git than is in normal bionc repos
+RUN apt-get install software-properties-common
 RUN add-apt-repository ppa:git-core/ppa -y
 
 RUN apt-get update -y && \
