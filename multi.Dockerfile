@@ -36,8 +36,9 @@ EXPOSE 8788/tcp
 
 # Install additional system packages ------------------------------------------#
 # Updating to a newer git than is in normal bionc repos
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:git-core/ppa -y
+
+RUN echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu bionic main" >> /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list
+
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
