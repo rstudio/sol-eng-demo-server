@@ -33,7 +33,6 @@ RUN apt-get update \
         libarchive-dev \
         libavfilter-dev \
         libcairo2-dev \
-        # libcurl4-openssl-dev \
         libfftw3-dev \
         libfontconfig1-dev \
         libfreetype6-dev \
