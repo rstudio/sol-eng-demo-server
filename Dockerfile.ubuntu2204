@@ -1,0 +1,265 @@
+FROM rstudio/r-session-complete:jammy-2023.03.0--fa5bcba
+LABEL maintainer="RStudio Docker <docker@rstudio.com>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# ------------------------------------------------------------------------------
+# Install system depdendenies for R pacakges
+# ------------------------------------------------------------------------------
+# This list was generated based on the System Prerequists defined in Package
+# Manager for the 'All' repo: https://colorado.posit.co/rspm/client/#/repos/4/overview
+RUN apt-get update \
+    && apt-get install -y \
+        automake \
+        bowtie2 \
+        bwidget \
+        cargo \
+        cmake \
+        coinor-libclp-dev \
+        curl \
+        dcraw \
+        default-jdk \
+        gdal-bin \
+        git \
+        gnupg \
+        gsfonts \
+        haveged \
+        imagej \
+        imagemagick \
+        jags \
+        libapparmor-dev \
+        libarchive-dev \
+        libavfilter-dev \
+        libcairo2-dev \
+        # libcurl4-openssl-dev \
+        libfftw3-dev \
+        libfontconfig1-dev \
+        libfreetype6-dev \
+        libfribidi-dev \
+        libgdal-dev \
+        libgeos-dev \
+        libgit2-dev \
+        libgl1-mesa-dev \
+        libglib2.0-dev \
+        libglpk-dev \
+        libglu1-mesa-dev \
+        libgmp3-dev \
+        libgpgme11-dev \
+        libgsl0-dev \
+        libharfbuzz-dev \
+        libhdf5-dev \
+        libhiredis-dev \
+        libicu-dev \
+        libimage-exiftool-perl \
+        libjpeg-dev \
+        libjq-dev \
+        libleptonica-dev \
+        libmagic-dev \
+        libmagick++-dev \
+        libmpfr-dev \
+        libmysqlclient-dev \
+        libnetcdf-dev \
+        libnode-dev \
+        libopencv-dev \
+        libopenmpi-dev \
+        libpng-dev \
+        libpoppler-cpp-dev \
+        libpq-dev \
+        libproj-dev \
+        libprotobuf-dev \
+        libquantlib0-dev \
+        librdf0-dev \
+        librsvg2-dev \
+        libsasl2-dev \
+        libsecret-1-dev \
+        libsndfile1-dev \
+        libsodium-dev \
+        libsqlite3-dev \
+        libssh2-1-dev \
+        libssl-dev \
+        libtesseract-dev \
+        libtiff-dev \
+        libudunits2-dev \
+        libwebp-dev \
+        libxft-dev \
+        libxml2-dev \
+        libxslt-dev \
+        libzmq3-dev \
+        make \
+        nvidia-cuda-dev \
+        ocl-icd-opencl-dev \
+        pandoc \
+        pandoc-citeproc \
+        pari-gp \
+        perl \
+        pkg-config \
+        protobuf-compiler \
+        python3 \
+        rustc \
+        saga \
+        tcl \
+        tesseract-ocr-eng \
+        texlive \
+        tk \
+        tk-dev \
+        tk-table \
+        unixodbc-dev \
+        zlib1g-dev \
+    # chromote requirements:
+    # && curl -fsSL -o /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    # && apt-get install -y /tmp/google-chrome.deb \
+    # && rm -f /tmp/google-chrome.deb \
+    # cleanup
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# libcurl4-openssl-dev is also a depedency for installing R packages. Install
+# it alone to avoid errors.
+RUN apt-get update \
+    && apt-get install -y \
+        libcurl4-openssl-dev \
+    # cleanup
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ------------------------------------------------------------------------------
+# Install system depdendenies requested by users
+# ------------------------------------------------------------------------------
+RUN apt-get update \
+    && apt-get install -y \
+        acl \
+        build-essential \
+        chromium-browser \
+        chromium-chromedriver \
+        gdebi-core \
+        ggobi \
+        # TODO: research some of the lib* packages, do we need these?
+        libatk1.0-dev \
+        libbz2-dev \
+        libffi-dev \
+        libgtk2.0-dev \
+        liblzma-dev \
+        libncursesw5-dev \
+        libpango1.0-dev \
+        libqgis-dev \
+        libraptor2-dev \
+        librasqal3-dev \
+        libreadline-dev \
+        librrd-dev \
+        libv8-dev \
+        libxmlsec1-dev \
+        llvm \
+        lmodern \
+        openjdk-8-jdk \
+        psmisc \
+        qpdf \
+        saint \
+        subversion \
+        texlive-latex-extra \
+        tree \
+        vim \
+        wget \
+        xz-utils \
+    # cleanup
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# ------------------------------------------------------------------------------
+# Install additional versions of R
+# ------------------------------------------------------------------------------
+# rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
+# - R 4.2.3
+# - R 4.1.3
+ARG R_VERSIONS="4.0.5 3.6.3"
+RUN for R_VER in $R_VERSIONS; \
+    do \
+        curl -O https://cdn.rstudio.com/r/ubuntu-2204/pkgs/r-${R_VER}_1_amd64.deb \
+        && gdebi -n r-${R_VER}_1_amd64.deb \
+        && rm -f ./r-${R_VER}_1_amd64.deb; \
+    done
+
+# ------------------------------------------------------------------------------
+# Install additional versions of Python
+# ------------------------------------------------------------------------------
+# rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
+# - Python 3.9.14
+# - Python 3.8.15
+ARG PYTHON_VERSIONS="3.11.3 3.10.11"
+RUN for PYTHON_VER in $PYTHON_VERSIONS; \
+    do \
+        curl -O https://cdn.rstudio.com/python/ubuntu-2204/pkgs/python-${PYTHON_VER}_1_amd64.deb \
+        && gdebi -n python-${PYTHON_VER}_1_amd64.deb \
+        && rm -rf python-${PYTHON_VER}_1_amd64.deb \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools; \
+    done
+
+# ------------------------------------------------------------------------------
+# Quarto extras
+# ------------------------------------------------------------------------------
+# Install depdencies required to render a quarto doc to a pdf.
+RUN tlmgr install \
+  koma-script \
+  caption \
+  tcolorbox \
+  pgf \
+  pdfcol \
+  environ \
+  oberdiek \
+  tikzfill \
+  bookmark
+
+# ------------------------------------------------------------------------------
+# User requested tools
+# ------------------------------------------------------------------------------
+# Install the GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install justfile
+RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg] https://proget.makedeb.org prebuilt-mpr $(lsb_release -cs)" | sudo tee /etc/apt/sources.list.d/prebuilt-mpr.list \
+    && apt-get update \
+    && apt-get install -y just \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install
+
+# Install linux brew
+# TODO:
+
+# ------------------------------------------------------------------------------
+# Set environment variables
+# ------------------------------------------------------------------------------
+ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
+ENV SHELL="/bin/bash"
+ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
+
+# TMP Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# Add a user for testing
+# USER sam:sam
+# RUN touch hello.txt
+RUN useradd --create-home --home-dir /home/sam -s /bin/bash sam
+# TMP END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+# ------------------------------------------------------------------------------
+# Workbench port
+# ------------------------------------------------------------------------------
+EXPOSE 8788/tcp
