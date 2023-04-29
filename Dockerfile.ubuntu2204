@@ -242,6 +242,9 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 # Install linux brew
 # TODO:
+RUN apt-get update \
+    && apt-get install build-essential git \
+    && curl -fsSL "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 # ------------------------------------------------------------------------------
 # Set environment variables
