@@ -106,11 +106,6 @@ RUN apt-get update \
         tk-table \
         unixodbc-dev \
         zlib1g-dev \
-    # chromote requirements:
-    # && curl -fsSL -o /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    # && apt-get install -y /tmp/google-chrome.deb \
-    # && rm -f /tmp/google-chrome.deb \
-    # cleanup
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -120,7 +115,6 @@ RUN apt-get update \
 RUN apt-get update \
     && apt-get install -y \
         libcurl4-openssl-dev \
-    # cleanup
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -164,7 +158,6 @@ RUN apt-get update \
         vim \
         wget \
         xz-utils \
-    # cleanup
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -241,10 +234,17 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install
 
 # Install linux brew
-# TODO:
-RUN apt-get update \
-    && apt-get install build-essential git \
-    && curl -fsSL "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+RUN apt-get update && \
+    apt-get install -y \
+        build-essential \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+    && (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /etc/profile.d/homebrew.sh \
+    && chmod +x /etc/profile.d/homebrew.sh \
+    && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
+    && brew install gcc
 
 # ------------------------------------------------------------------------------
 # Set environment variables
