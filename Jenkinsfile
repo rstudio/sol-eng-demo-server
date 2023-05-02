@@ -59,10 +59,10 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel
+        parallel {
             '2023.03-jammy': {
                 def image = buildImage(
-                    tag: "202303-jammy"
+                    tag: "202303-jammy",
                     rVersions: "3.6.3", 
                     pythonVersions: "3.11.3", 
                     latest: true, 
@@ -70,7 +70,7 @@ ansiColor('xterm') {
                 )
                 print "Finished 2023.03-jammy"
             }
-
+        }
     }
     stage('finish') {
         node('docker') {
