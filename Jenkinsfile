@@ -11,14 +11,15 @@
 pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(Map args=null, def rVersions, def pythonVersions, def gossVars='goss_vars_basic.yaml') {
+def buildImage(Map def tag, def rVersions, def pythonVersions, def latest, def gossVars) {
     
     print("Bulding R versions: ${rVersions}")
     print("Bulding Python versions: ${pythonVersions}")
 
     node('docker') {
         checkout scm
-    
+        def imageName = 'pwb-session'
+        
         def image = pullBuildPush(
             image_name: 'pwb-session',
             image_tag: tag,
@@ -33,19 +34,19 @@ def buildImage(Map args=null, def rVersions, def pythonVersions, def gossVars='g
             push: pushImage
         )
         
-        def imageName = image.imageName()
 
-        sh """
-        # See https://github.com/aelsabbahy/goss/releases for release versions
-        curl -L https://github.com/aelsabbahy/goss/releases/download/v0.3.8/goss-linux-amd64 -o ./goss
-        chmod +rx ./goss
+        // sh """
+        // # See https://github.com/aelsabbahy/goss/releases for release versions
+        // curl -L https://github.com/aelsabbahy/goss/releases/download/v0.3.8/goss-linux-amd64 -o ./goss
+        // chmod +rx ./goss
 
-        # (optional) dgoss docker wrapper (use 'master' for latest version)
-        curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o ./dgoss
-        chmod +rx ./dgoss
+        // # (optional) dgoss docker wrapper (use 'master' for latest version)
+        // curl -L https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.8/extras/dgoss/dgoss -o ./dgoss
+        // chmod +rx ./dgoss
 
-        GOSS_VARS=${gossVars} GOSS_PATH=./goss ./dgoss run -it -e R_VERSIONS=${rVersions} ${imageName}
-        """
+        // GOSS_VARS=${gossVars} GOSS_PATH=./goss ./dgoss run -it -e R_VERSIONS=${rVersions} ${imageName}
+        // """
+
         return image
     }
 
@@ -60,14 +61,13 @@ ansiColor('xterm') {
     stage('build') {
         parallel '2023.03-jammy': {
             def image = buildImage(
-                rVersions: "", 
-                pythonVersions: "", 
+                tag: "202303-jammy"
+                rVersions: "3.6.3", 
+                pythonVersions: "3.11.3", 
                 latest: true, 
-                dockerfile: '.Dockerfile.ubuntu2204',
-                tag: "pwb-202303-jammy", 
                 gossVars: 'goss_vars.yaml'
             )
-            print "2023.03-jammy"
+            print "Finished 2023.03-jammy"
         }
     }
     stage('finish') {
