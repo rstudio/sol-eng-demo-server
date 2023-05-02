@@ -21,7 +21,7 @@ def buildImage(def tag, def rVersions, def pythonVersions, def latest, def gossV
         def imageName = 'pwb-session'
         
         def image = pullBuildPush(
-            image_name: 'pwb-session',
+            image_name: imageName,
             image_tag: tag,
             // can use this to invalidate the cache if needed
             // cache_tag: 'none',
@@ -59,17 +59,9 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel {
-            '2023.03-jammy': {
-                def image = buildImage(
-                    tag: "202303-jammy",
-                    rVersions: "3.6.3", 
-                    pythonVersions: "3.11.3", 
-                    latest: true, 
-                    gossVars: 'goss_vars.yaml'
-                )
-                print "Finished 2023.03-jammy"
-            }
+        parallel 202303jammy: {
+            def image = buildImage(tag: "202303-jammy", rVersions: "3.6.3",  pythonVersions: "3.11.3",  latest: true,  gossVars: 'goss_vars.yaml')
+            print "Finished 2023.03-jammy"
         }
     }
     stage('finish') {
