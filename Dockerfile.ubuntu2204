@@ -10,114 +10,114 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # ------------------------------------------------------------------------------
 # This list was generated based on the System Prerequists defined in Package
 # Manager for the 'All' repo: https://colorado.posit.co/rspm/client/#/repos/4/overview
-RUN apt-get update \
-    && apt-get install -y \
-        automake \
-        bowtie2 \
-        bwidget \
-        cargo \
-        cmake \
-        coinor-libclp-dev \
-        curl \
-        dcraw \
-        default-jdk \
-        gdal-bin \
-        git \
-        gnupg \
-        gsfonts \
-        haveged \
-        imagej \
-        imagemagick \
-        jags \
-        libapparmor-dev \
-        libarchive-dev \
-        libavfilter-dev \
-        libcairo2-dev \
-        libfftw3-dev \
-        libfontconfig1-dev \
-        libfreetype6-dev \
-        libfribidi-dev \
-        libgdal-dev \
-        libgeos-dev \
-        libgit2-dev \
-        libgl1-mesa-dev \
-        libglib2.0-dev \
-        libglpk-dev \
-        libglu1-mesa-dev \
-        libgmp3-dev \
-        libgpgme11-dev \
-        libgsl0-dev \
-        libharfbuzz-dev \
-        libhdf5-dev \
-        libhiredis-dev \
-        libicu-dev \
-        libimage-exiftool-perl \
-        libjpeg-dev \
-        libjq-dev \
-        libleptonica-dev \
-        libmagic-dev \
-        libmagick++-dev \
-        libmpfr-dev \
-        libmysqlclient-dev \
-        libnetcdf-dev \
-        libnode-dev \
-        libopencv-dev \
-        libopenmpi-dev \
-        libpng-dev \
-        libpoppler-cpp-dev \
-        libpq-dev \
-        libproj-dev \
-        libprotobuf-dev \
-        libquantlib0-dev \
-        librdf0-dev \
-        librsvg2-dev \
-        libsasl2-dev \
-        libsecret-1-dev \
-        libsndfile1-dev \
-        libsodium-dev \
-        libsqlite3-dev \
-        libssh2-1-dev \
-        libssl-dev \
-        libtesseract-dev \
-        libtiff-dev \
-        libudunits2-dev \
-        libwebp-dev \
-        libxft-dev \
-        libxml2-dev \
-        libxslt-dev \
-        libzmq3-dev \
-        make \
-        nvidia-cuda-dev \
-        ocl-icd-opencl-dev \
-        pandoc \
-        pandoc-citeproc \
-        pari-gp \
-        perl \
-        pkg-config \
-        protobuf-compiler \
-        python3 \
-        rustc \
-        saga \
-        tcl \
-        tesseract-ocr-eng \
-        texlive \
-        tk \
-        tk-dev \
-        tk-table \
-        unixodbc-dev \
-        zlib1g-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#     && apt-get install -y \
+#         automake \
+#         bowtie2 \
+#         bwidget \
+#         cargo \
+#         cmake \
+#         coinor-libclp-dev \
+#         curl \
+#         dcraw \
+#         default-jdk \
+#         gdal-bin \
+#         git \
+#         gnupg \
+#         gsfonts \
+#         haveged \
+#         imagej \
+#         imagemagick \
+#         jags \
+#         libapparmor-dev \
+#         libarchive-dev \
+#         libavfilter-dev \
+#         libcairo2-dev \
+#         libfftw3-dev \
+#         libfontconfig1-dev \
+#         libfreetype6-dev \
+#         libfribidi-dev \
+#         libgdal-dev \
+#         libgeos-dev \
+#         libgit2-dev \
+#         libgl1-mesa-dev \
+#         libglib2.0-dev \
+#         libglpk-dev \
+#         libglu1-mesa-dev \
+#         libgmp3-dev \
+#         libgpgme11-dev \
+#         libgsl0-dev \
+#         libharfbuzz-dev \
+#         libhdf5-dev \
+#         libhiredis-dev \
+#         libicu-dev \
+#         libimage-exiftool-perl \
+#         libjpeg-dev \
+#         libjq-dev \
+#         libleptonica-dev \
+#         libmagic-dev \
+#         libmagick++-dev \
+#         libmpfr-dev \
+#         libmysqlclient-dev \
+#         libnetcdf-dev \
+#         libnode-dev \
+#         libopencv-dev \
+#         libopenmpi-dev \
+#         libpng-dev \
+#         libpoppler-cpp-dev \
+#         libpq-dev \
+#         libproj-dev \
+#         libprotobuf-dev \
+#         libquantlib0-dev \
+#         librdf0-dev \
+#         librsvg2-dev \
+#         libsasl2-dev \
+#         libsecret-1-dev \
+#         libsndfile1-dev \
+#         libsodium-dev \
+#         libsqlite3-dev \
+#         libssh2-1-dev \
+#         libssl-dev \
+#         libtesseract-dev \
+#         libtiff-dev \
+#         libudunits2-dev \
+#         libwebp-dev \
+#         libxft-dev \
+#         libxml2-dev \
+#         libxslt-dev \
+#         libzmq3-dev \
+#         make \
+#         nvidia-cuda-dev \
+#         ocl-icd-opencl-dev \
+#         pandoc \
+#         pandoc-citeproc \
+#         pari-gp \
+#         perl \
+#         pkg-config \
+#         protobuf-compiler \
+#         python3 \
+#         rustc \
+#         saga \
+#         tcl \
+#         tesseract-ocr-eng \
+#         texlive \
+#         tk \
+#         tk-dev \
+#         tk-table \
+#         unixodbc-dev \
+#         zlib1g-dev \
+#     && apt-get autoremove -y \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
 
 # libcurl4-openssl-dev is also a depedency for installing R packages. Install
 # it alone to avoid errors.
-RUN apt-get update \
-    && apt-get install -y \
-        libcurl4-openssl-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#     && apt-get install -y \
+#         libcurl4-openssl-dev \
+#     && apt-get autoremove -y \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
 
 
 # ------------------------------------------------------------------------------
@@ -132,20 +132,20 @@ RUN apt-get update \
         gdebi-core \
         ggobi \
         # TODO: research some of the lib* packages, do we need these?
-        libatk1.0-dev \
-        libbz2-dev \
-        libffi-dev \
-        libgtk2.0-dev \
-        liblzma-dev \
-        libncursesw5-dev \
-        libpango1.0-dev \
-        libqgis-dev \
-        libraptor2-dev \
-        librasqal3-dev \
-        libreadline-dev \
-        librrd-dev \
-        libv8-dev \
-        libxmlsec1-dev \
+        # libatk1.0-dev \
+        # libbz2-dev \
+        # libffi-dev \
+        # libgtk2.0-dev \
+        # liblzma-dev \
+        # libncursesw5-dev \
+        # libpango1.0-dev \
+        # libqgis-dev \
+        # libraptor2-dev \
+        # librasqal3-dev \
+        # libreadline-dev \
+        # librrd-dev \
+        # libv8-dev \
+        # libxmlsec1-dev \
         llvm \
         lmodern \
         openjdk-8-jdk \
@@ -259,6 +259,12 @@ ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 # USER sam:sam
 # RUN touch hello.txt
 RUN useradd --create-home --home-dir /home/sam -s /bin/bash sam
+
+COPY ./pkg_names.csv /pkg_names.csv
+COPY ./pkg_installer.R /pkg_installer.R
+RUN Rscript "pkg_installer.R"
+
+
 # TMP END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # ------------------------------------------------------------------------------

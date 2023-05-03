@@ -1,56 +1,27 @@
-This repository contains Docker assets for the Solutions Engineering Demo
-server (lovingly known as "Colorado").
-
-## Getting Started
-
-Because these images are stored in AWS ECR, they are _not_ easily accessible on
-DockerHub.
-
-Rather, you need to know how to:
-
-- [Authenticate to AWS
-  ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registries.html#registry_auth)
-- [Access AWS ECR
-  Registries](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registries.html)
+This repository contains Docker assets for the Solutions Engineering Demo server (lovingly known as "Colorado").
 
 ## Disclaimers
 
-We love open source!! However, these resources have a very narrow vision for a
-very specific environment. If you are looking for a bit more generic solution
-that may apply better to your environment, we suggest you check out some of the
-following resources:
+These images are stored in AWS ECR, they are _not_ accessible on DockerHub.
 
-- [R Builds](https://github.com/rstudio/r-builds)
-- [docker-r-session-complete](https://github.com/sol-eng/docker-r-session-complete),
-  which these resources are based on
-- [The docker-r-session-complete images](https://hub.docker.com/r/rstudio/r-session-complete)
-- [An overview of the job launcher](https://solutions.rstudio.com/launcher/overview/)
+We love open source!! However, these resources have a very narrow vision for a very specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the[r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
 
-# Dev Workflow
+## Dev Workflow
 
-## Build Pipeline
+### Build Pipeline
 
 - All branches / PRs are built on Jenkins
 - Only `master` pushes to the ECR repository
 
-## Run tests locally
+### Run tests locally
 
-- Install [`dgoss`](https://github.com/aelsabbahy/goss/tree/master/extras/dgoss)
-- Run `make test` 
-- To edit tests interactively run `make edit`
-- **NOTE**: this requires that you have built (or pulled) the images locally
+Build the image locally:
 
-## Excluding Packages
+```bash
+just build
+```
+Run tests:
 
-Some packages are ok to fail... and we have more failures for older R versions...
-- Add packages that are OK failing to `pkg_failing.txt`
-- Run `make vars` to regenerate the `goss_vars.yaml`
-- Ultimately, we need to take some additional passes at these to find out why they are failing
-
-## Adding Images
-
-To add an image, you will need to create a repository in ECS (in the subaccount):
-
-https://us-east-1.console.aws.amazon.com/ecr/repositories?region=us-east-1
-
-Be sure to copy the Policy JSON / Permissions from one of the existing repositories.
+```bash
+just test
+```

@@ -46,13 +46,13 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel '202303jammy': {
-            def image = buildImage("202303-jammy", "3.6.3", "3.11.3", true)
-            print "Finished 2023.03-jammy"
+        parallel '202303-jammy-latest': {
+            def image = buildImage("2023.03.0", "3.6.3", "3.11.3", true)
+            print "Finished 202303-jammy-latest"
         },
-        '202303jammy2': {
-            def image = buildImage("202303-jammy", "4.0.5", "3.11.3", true)
-            print "Finished 2023.03-jammy"
+        '202303-jammy-old': {
+            def image = buildImage("2023.03.0-old-r-and-python", "4.0.5", "3.11.3", true)
+            print "Finished 202303-jammy-old"
         }
     }
     stage('finish') {
