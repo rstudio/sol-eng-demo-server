@@ -11,7 +11,7 @@
 pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def tag, def rVersions, def pythonVersions, def latest) {
+def buildImage(def tag, def rVersions,  def defaultR, def pythonVersions, def defaultPython def latest) {
     
     print("Bulding R versions: ${rVersions}")
     print("Bulding Python versions: ${pythonVersions}")
@@ -27,7 +27,7 @@ def buildImage(def tag, def rVersions, def pythonVersions, def latest) {
             // cache_tag: 'none',
             latest_tag: latest,
             dockerfile: 'Dockerfile',
-            build_args: "--build-arg R_VERSIONS=${rVersions} --build-arg PYTHON_VERSIONS=${pythonVersions}",
+            build_args: "--build-arg R_VERSIONS=${rVersions} --build-arg R_DEFAULT_VERSION=${defaultR} --build-arg PYTHON_VERSIONS=${pythonVersions} --build-arg PYTHON_DEFAULT_VERSION=${defaultPython}",
             build_arg_jenkins_uid: 'JENKINS_UID',
             build_arg_jenkins_gid: 'JENKINS_GID',
             registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
@@ -55,7 +55,7 @@ ansiColor('xterm') {
             // - 4.0.5
             // - 4.1.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
             // - 4.2.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
-            def image = buildImage("2023.03.0-default", "4.0.5", "3.10.11", true)
+            def image = buildImage("2023.03.0-default", "4.0.5", "4.2.3", "3.10.11", "3.10.11", true)
             print "Finished 2023.03.0-default"
         },
         '2023.03.0-old-r-and-python': {
@@ -68,7 +68,7 @@ ansiColor('xterm') {
             // - 3.6.3
             // - 4.1.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
             // - 4.2.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
-            def image = buildImage("2023.03.0-old-r-and-python", "3.5.3 3.6.3", "3.7.16", true)
+            def image = buildImage("2023.03.0-old-r-and-python", "3.5.3 3.6.3", "4.2.3", "3.7.16", "3.9.14", true)
             print "Finished 2023.03.0-old-r-and-python"
         }
     }

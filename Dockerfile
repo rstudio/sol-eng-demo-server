@@ -6,121 +6,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------------------------
-# Install system depdendenies for R pacakges
-# ------------------------------------------------------------------------------
-# This list was generated based on the System Prerequists defined in Package
-# Manager for the 'All' repo: https://colorado.posit.co/rspm/client/#/repos/4/overview
-# RUN apt-get update \
-#     && apt-get install -y \
-#         automake \
-#         bowtie2 \
-#         bwidget \
-#         cargo \
-#         cmake \
-#         coinor-libclp-dev \
-#         curl \
-#         dcraw \
-#         default-jdk \
-#         gdal-bin \
-#         git \
-#         gnupg \
-#         gsfonts \
-#         haveged \
-#         imagej \
-#         imagemagick \
-#         jags \
-#         libapparmor-dev \
-#         libarchive-dev \
-#         libavfilter-dev \
-#         libcairo2-dev \
-#         libfftw3-dev \
-#         libfontconfig1-dev \
-#         libfreetype6-dev \
-#         libfribidi-dev \
-#         libgdal-dev \
-#         libgeos-dev \
-#         libgit2-dev \
-#         libgl1-mesa-dev \
-#         libglib2.0-dev \
-#         libglpk-dev \
-#         libglu1-mesa-dev \
-#         libgmp3-dev \
-#         libgpgme11-dev \
-#         libgsl0-dev \
-#         libharfbuzz-dev \
-#         libhdf5-dev \
-#         libhiredis-dev \
-#         libicu-dev \
-#         libimage-exiftool-perl \
-#         libjpeg-dev \
-#         libjq-dev \
-#         libleptonica-dev \
-#         libmagic-dev \
-#         libmagick++-dev \
-#         libmpfr-dev \
-#         libmysqlclient-dev \
-#         libnetcdf-dev \
-#         libnode-dev \
-#         libopencv-dev \
-#         libopenmpi-dev \
-#         libpng-dev \
-#         libpoppler-cpp-dev \
-#         libpq-dev \
-#         libproj-dev \
-#         libprotobuf-dev \
-#         libquantlib0-dev \
-#         librdf0-dev \
-#         librsvg2-dev \
-#         libsasl2-dev \
-#         libsecret-1-dev \
-#         libsndfile1-dev \
-#         libsodium-dev \
-#         libsqlite3-dev \
-#         libssh2-1-dev \
-#         libssl-dev \
-#         libtesseract-dev \
-#         libtiff-dev \
-#         libudunits2-dev \
-#         libwebp-dev \
-#         libxft-dev \
-#         libxml2-dev \
-#         libxslt-dev \
-#         libzmq3-dev \
-#         make \
-#         nvidia-cuda-dev \
-#         ocl-icd-opencl-dev \
-#         pandoc \
-#         pandoc-citeproc \
-#         pari-gp \
-#         perl \
-#         pkg-config \
-#         protobuf-compiler \
-#         python3 \
-#         rustc \
-#         saga \
-#         tcl \
-#         tesseract-ocr-eng \
-#         texlive \
-#         tk \
-#         tk-dev \
-#         tk-table \
-#         unixodbc-dev \
-#         zlib1g-dev \
-#     && apt-get autoremove -y \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
-
-# libcurl4-openssl-dev is also a depedency for installing R packages. Install
-# it alone to avoid errors.
-# RUN apt-get update \
-#     && apt-get install -y \
-#         libcurl4-openssl-dev \
-#     && apt-get autoremove -y \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
-
-
-# ------------------------------------------------------------------------------
 # Install system depdendenies requested by users
 # ------------------------------------------------------------------------------
 RUN apt-get update \
@@ -154,12 +39,16 @@ RUN apt-get update \
 # - R 4.1.3
 # - R 4.2.3
 ARG R_VERSIONS="3.6.3 4.0.5"
+ARG R_DEFAULT_VERSION="4.2.3"
 RUN for R_VER in $R_VERSIONS; \
     do \
         curl -O https://cdn.rstudio.com/r/ubuntu-2204/pkgs/r-${R_VER}_1_amd64.deb \
         && gdebi -n r-${R_VER}_1_amd64.deb \
         && rm -f ./r-${R_VER}_1_amd64.deb; \
     done
+# Set the default version of R
+RUN ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/R /usr/local/bin/R \
+    && ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/Rscript /usr/local/bin/Rscript
 
 # ------------------------------------------------------------------------------
 # Install additional versions of Python
@@ -168,6 +57,7 @@ RUN for R_VER in $R_VERSIONS; \
 # - Python 3.8.15
 # - Python 3.9.14
 ARG PYTHON_VERSIONS="3.10.11 3.11.3"
+ARG PYTHON_DEFAULT_VERSION="3.10.11"
 RUN for PYTHON_VER in $PYTHON_VERSIONS; \
     do \
         curl -O https://cdn.rstudio.com/python/ubuntu-2204/pkgs/python-${PYTHON_VER}_1_amd64.deb \
@@ -175,6 +65,9 @@ RUN for PYTHON_VER in $PYTHON_VERSIONS; \
         && rm -rf python-${PYTHON_VER}_1_amd64.deb \
         && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools; \
     done
+ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
+ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
 
 # ------------------------------------------------------------------------------
 # Quarto extras
@@ -216,28 +109,36 @@ RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg 
 # Install the AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
-    && ./aws/install
+    && ./aws/install \
+    && rm awscliv2.zip
 
 # Install linux brew
-RUN apt-get update && \
-    apt-get install -y \
-        build-essential \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
-    && (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /etc/profile.d/homebrew.sh \
-    && chmod +x /etc/profile.d/homebrew.sh \
-    && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
-    && brew install gcc
+# RUN apt-get update && \
+#     apt-get install -y \
+#         build-essential \
+#     && apt-get autoremove -y \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/* \
+#     && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+#     && (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /etc/profile.d/homebrew.sh \
+#     && chmod +x /etc/profile.d/homebrew.sh \
+#     && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
+#     && brew install gcc
 
 # ------------------------------------------------------------------------------
 # Set environment variables
 # ------------------------------------------------------------------------------
-ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
 ENV SHELL="/bin/bash"
-ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
+
+# ------------------------------------------------------------------------------
+# Testing
+# ------------------------------------------------------------------------------
+# This section is for testing only. Comment out before committing to main.
+# Create a new user:
+# RUN useradd -ms /bin/bash newuser
+# USER newuser
+# WORKDIR /home/newuser
 
 # ------------------------------------------------------------------------------
 # Workbench port
