@@ -11,7 +11,7 @@
 pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def tag, def rVersions, def pythonVersions, def latest, def gossVars) {
+def buildImage(def tag, def rVersions, def pythonVersions, def latest) {
     
     print("Bulding R versions: ${rVersions}")
     print("Bulding Python versions: ${pythonVersions}")
@@ -47,11 +47,11 @@ ansiColor('xterm') {
     }
     stage('build') {
         parallel '202303jammy': {
-            def image = buildImage(tag: "202303-jammy", rVersions: "3.6.3",  pythonVersions: "3.11.3", latest: true)
+            def image = buildImage("202303-jammy", "3.6.3", "3.11.3", true)
             print "Finished 2023.03-jammy"
         },
         '202303jammy2': {
-            def image = buildImage(tag: "202303-jammy", rVersions: "4.0.5",  pythonVersions: "3.11.3", latest: true)
+            def image = buildImage("202303-jammy", "4.0.5", "3.11.3", true)
             print "Finished 2023.03-jammy"
         }
     }
