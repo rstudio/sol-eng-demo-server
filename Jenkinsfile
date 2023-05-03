@@ -27,7 +27,7 @@ def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def def
             // cache_tag: 'none',
             latest_tag: latest,
             dockerfile: 'Dockerfile',
-            build_args: "--build-arg R_VERSIONS=${rVersions} --build-arg R_DEFAULT_VERSION=${defaultR} --build-arg PYTHON_VERSIONS=${pythonVersions} --build-arg PYTHON_DEFAULT_VERSION=${defaultPython}",
+            build_args: "--build-arg R_VERSIONS='${rVersions}' --build-arg R_DEFAULT_VERSION=${defaultR} --build-arg PYTHON_VERSIONS='${pythonVersions}' --build-arg PYTHON_DEFAULT_VERSION=${defaultPython}",
             build_arg_jenkins_uid: 'JENKINS_UID',
             build_arg_jenkins_gid: 'JENKINS_GID',
             registry_url: 'https://075258722956.dkr.ecr.us-east-1.amazonaws.com',
