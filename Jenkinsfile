@@ -18,7 +18,7 @@ def buildImage(def tag, def rVersions, def pythonVersions, def latest) {
 
     node('docker') {
         checkout scm
-        def imageName = 'pwb-session'
+        def imageName = 'sol-eng-demo-server'
         
         def image = pullBuildPush(
             image_name: imageName,
