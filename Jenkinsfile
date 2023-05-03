@@ -11,7 +11,7 @@
 pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def tag, def rVersions,  def defaultR, def pythonVersions, def defaultPython def latest) {
+def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def defaultPython, def latest) {
     
     print("Bulding R versions: ${rVersions}")
     print("Bulding Python versions: ${pythonVersions}")
