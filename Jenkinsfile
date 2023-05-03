@@ -26,7 +26,7 @@ def buildImage(def tag, def rVersions, def pythonVersions, def latest) {
             // can use this to invalidate the cache if needed
             // cache_tag: 'none',
             latest_tag: latest,
-            dockerfile: 'Dockerfile.ubuntu2204',
+            dockerfile: 'Dockerfile',
             build_args: "--build-arg R_VERSIONS=${rVersions} --build-arg PYTHON_VERSIONS=${pythonVersions}",
             build_arg_jenkins_uid: 'JENKINS_UID',
             build_arg_jenkins_gid: 'JENKINS_GID',
@@ -46,13 +46,30 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel '202303-jammy-latest': {
-            def image = buildImage("2023.03.0", "3.6.3", "3.11.3", true)
-            print "Finished 202303-jammy-latest"
+        parallel '2023.03.0-default': {
+            // This image will have Python:
+            // - 3.8.15 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // - 3.9.14 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // - 3.10.11
+            // This image will have R:
+            // - 4.0.5
+            // - 4.1.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // - 4.2.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            def image = buildImage("2023.03.0-default", "4.0.5", "3.10.11", true)
+            print "Finished 2023.03.0-default"
         },
-        '202303-jammy-old': {
-            def image = buildImage("2023.03.0-old-r-and-python", "4.0.5", "3.11.3", true)
-            print "Finished 202303-jammy-old"
+        '2023.03.0-old-r-and-python': {
+            // This image will have Python:
+            // - 3.7.16
+            // - 3.8.15 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // - 3.9.14 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // This image will have R:
+            // - 3.5.3
+            // - 3.6.3
+            // - 4.1.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            // - 4.2.3 (included in rstudio/r-session-complete:jammy-2023.03.0--fa5bcba)
+            def image = buildImage("2023.03.0-old-r-and-python", "3.5.3 3.6.3", "3.7.16", true)
+            print "Finished 2023.03.0-old-r-and-python"
         }
     }
     stage('finish') {

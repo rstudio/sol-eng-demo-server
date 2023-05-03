@@ -131,21 +131,6 @@ RUN apt-get update \
         chromium-chromedriver \
         gdebi-core \
         ggobi \
-        # TODO: research some of the lib* packages, do we need these?
-        # libatk1.0-dev \
-        # libbz2-dev \
-        # libffi-dev \
-        # libgtk2.0-dev \
-        # liblzma-dev \
-        # libncursesw5-dev \
-        # libpango1.0-dev \
-        # libqgis-dev \
-        # libraptor2-dev \
-        # librasqal3-dev \
-        # libreadline-dev \
-        # librrd-dev \
-        # libv8-dev \
-        # libxmlsec1-dev \
         llvm \
         lmodern \
         openjdk-8-jdk \
@@ -166,9 +151,9 @@ RUN apt-get update \
 # Install additional versions of R
 # ------------------------------------------------------------------------------
 # rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
-# - R 4.2.3
 # - R 4.1.3
-ARG R_VERSIONS="4.0.5 3.6.3"
+# - R 4.2.3
+ARG R_VERSIONS="3.6.3 4.0.5"
 RUN for R_VER in $R_VERSIONS; \
     do \
         curl -O https://cdn.rstudio.com/r/ubuntu-2204/pkgs/r-${R_VER}_1_amd64.deb \
@@ -180,9 +165,9 @@ RUN for R_VER in $R_VERSIONS; \
 # Install additional versions of Python
 # ------------------------------------------------------------------------------
 # rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
-# - Python 3.9.14
 # - Python 3.8.15
-ARG PYTHON_VERSIONS="3.11.3 3.10.11"
+# - Python 3.9.14
+ARG PYTHON_VERSIONS="3.10.11 3.11.3"
 RUN for PYTHON_VER in $PYTHON_VERSIONS; \
     do \
         curl -O https://cdn.rstudio.com/python/ubuntu-2204/pkgs/python-${PYTHON_VER}_1_amd64.deb \
@@ -253,19 +238,6 @@ ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
 ENV SHELL="/bin/bash"
 ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
-
-# TMP Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# Add a user for testing
-# USER sam:sam
-# RUN touch hello.txt
-RUN useradd --create-home --home-dir /home/sam -s /bin/bash sam
-
-COPY ./pkg_names.csv /pkg_names.csv
-COPY ./pkg_installer.R /pkg_installer.R
-RUN Rscript "pkg_installer.R"
-
-
-# TMP END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # ------------------------------------------------------------------------------
 # Workbench port
