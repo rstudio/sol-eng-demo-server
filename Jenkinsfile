@@ -46,11 +46,11 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel 202303jammy: {
+        parallel '202303jammy': {
             def image = buildImage(tag: "202303-jammy", rVersions: "3.6.3",  pythonVersions: "3.11.3", latest: true)
             print "Finished 2023.03-jammy"
         },
-        202303jammy2: {
+        '202303jammy2': {
             def image = buildImage(tag: "202303-jammy", rVersions: "4.0.5",  pythonVersions: "3.11.3", latest: true)
             print "Finished 2023.03-jammy"
         }
