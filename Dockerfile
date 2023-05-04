@@ -18,6 +18,8 @@ RUN apt-get update \
         ggobi \
         llvm \
         lmodern \
+        nodejs \
+        npm \
         openjdk-8-jdk \
         psmisc \
         qpdf \
@@ -112,33 +114,10 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install \
     && rm awscliv2.zip
 
-# Install linux brew
-# RUN apt-get update && \
-#     apt-get install -y \
-#         build-essential \
-#     && apt-get autoremove -y \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/* \
-#     && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
-#     && (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /etc/profile.d/homebrew.sh \
-#     && chmod +x /etc/profile.d/homebrew.sh \
-#     && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
-#     && brew install gcc
-
 # ------------------------------------------------------------------------------
 # Set environment variables
 # ------------------------------------------------------------------------------
 ENV SHELL="/bin/bash"
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
-
-# ------------------------------------------------------------------------------
-# Testing
-# ------------------------------------------------------------------------------
-# This section is for testing only. Comment out before committing to main.
-# Create a new user:
-# RUN useradd -ms /bin/bash newuser
-# USER newuser
-# WORKDIR /home/newuser
 
 # ------------------------------------------------------------------------------
 # Workbench port
