@@ -1,3 +1,7 @@
+# This justfile provides common commands for building and testing the images
+# locally. It is NOT part of the CI/CD pipeline. The CI/CD pipeline is driven by
+# the Jenkinsfile.
+
 # Define the all of shared parameters
 tag := "pwb-session"
 
