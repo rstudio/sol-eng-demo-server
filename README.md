@@ -1,19 +1,37 @@
-This repository contains Docker assets for the Solutions Engineering Demo server (lovingly known as "Colorado").
+# sol-eng-demo-server
+
+This repository contains Workbench session images deployed to the Solutions Engineering Demo server (lovingly known as "Colorado").
 
 ## Disclaimers
 
 These images are stored in AWS ECR, they are _not_ accessible on DockerHub.
 
-We love open source!! However, these resources have a very narrow vision for a very specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the[r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
+We love open source!! However, these resources have a very narrow vision for a very specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
+
+## Description of Image
+
+The sol-eng-demo-server images build off of the  off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based off of `rstudio/r-session-complete:jammy-2023.03.0--fa5bcba`. The `r-session-complete` includes most of the components we need for our Workbench sessions including:
+
+- Workbench session components
+- System dependencies required to build and install most R packages
+- The [Posit Professional Database Drivers](https://docs.posit.co/pro-drivers/)
+- R version 4.1.3
+- R version 4.2.3
+- Python version 3.8.15
+- Python version 3.9.14
+
+The base `r-session-complete` is extended by adding additional versions of R and Python, as well as some system dependencies requested by Colorado users. See the [Dockerfile](./Dockerfile) for more details.
 
 ## Dev Workflow
 
 ### Build Pipeline
 
-- All branches / PRs are built on Jenkins
-- Only `master` pushes to the ECR repository
+- A push to any branch will trigger a build in Jenkins.
+- Only pushes to the `main` will trigger pushing a new image to the ECR repository.
 
-### Run tests locally
+### Local development
+
+Before triggering a new Jenkins build, you should verify that you are able to build and test the images locally. This repository uses [justfile](https://github.com/casey/just) to run common commands.
 
 Build the image locally:
 

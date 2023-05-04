@@ -1,6 +1,6 @@
 # Test that it is possible to install all of the R packages that were installed
 # in the system library for Posit Workbench on Colorado Ubuntu 18.04. The list
-# was obtained by running the followig command in Colorado on 2023-05-03:
+# was obtained by running the following command in Colorado on 2023-05-03:
 #
 # installed.packages(lib.loc = c("/opt/R/4.2.0/lib/R/library")) |>
 #   dplyr::as_tibble() |> 
