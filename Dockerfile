@@ -65,7 +65,9 @@ RUN for PYTHON_VER in $PYTHON_VERSIONS; \
         curl -O https://cdn.rstudio.com/python/ubuntu-2204/pkgs/python-${PYTHON_VER}_1_amd64.deb \
         && gdebi -n python-${PYTHON_VER}_1_amd64.deb \
         && rm -rf python-${PYTHON_VER}_1_amd64.deb \
-        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools; \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install ipykernel \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m ipykernel install --name py${PYTHON_VER} --display-name "Python ${PYTHON_VER}"; \
     done
 ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
