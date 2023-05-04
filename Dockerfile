@@ -97,7 +97,11 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get install -y gh \
     && apt-get autoremove -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && git config --global credential.https://github.com.helper '!/usr/bin/gh auth git-credential' \
+    && git config --global credential.https://gist.github.com.helper '!/usr/bin/gh auth git-credential'
+
+# git config --global user.name "Your Name"
 
 # Install justfile
 RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null \
