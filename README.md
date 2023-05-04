@@ -4,13 +4,13 @@ This repository contains Workbench session images deployed to the Solutions Engi
 
 ## Disclaimers
 
-These images are stored in AWS ECR, they are _not_ accessible on DockerHub.
+These images are stored in AWS ECR; they are _not_ accessible on DockerHub.
 
-We love open source!! However, these resources have a very narrow vision for a very specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
+We love open source!! However, these resources have a narrow vision for a specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
 
 ## Description of Image
 
-The sol-eng-demo-server images build off of the  off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based off of `rstudio/r-session-complete:jammy-2023.03.0--fa5bcba`. The `r-session-complete` includes most of the components we need for our Workbench sessions including:
+The sol-eng-demo-server images are built from [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based on `rstudio/r-session-complete:jammy-2023.03.0--fa5bcba`. The `r-session-complete` includes most of the components we need for our Workbench sessions, including:
 
 - Workbench session components
 - System dependencies required to build and install most R packages
@@ -20,7 +20,7 @@ The sol-eng-demo-server images build off of the  off of the [r-session-complete]
 - Python version 3.8.15
 - Python version 3.9.14
 
-The base `r-session-complete` is extended by adding additional versions of R and Python, as well as some system dependencies requested by Colorado users. See the [Dockerfile](./Dockerfile) for more details.
+The base `r-session-complete` is extended by adding additional R and Python versions and system dependencies requested by Colorado users. See the [Dockerfile](./Dockerfile) for more details.
 
 ## Dev Workflow
 
@@ -31,7 +31,7 @@ The base `r-session-complete` is extended by adding additional versions of R and
 
 ### Local development
 
-Before triggering a new Jenkins build, you should verify that you are able to build and test the images locally. This repository uses [justfile](https://github.com/casey/just) to run common commands.
+Before triggering a new Jenkins build, verify that you can build and test the images locally. This repository uses [justfile](https://github.com/casey/just) to run common commands.
 
 Build the image locally:
 
