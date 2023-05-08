@@ -69,6 +69,17 @@ RUN for PYTHON_VER in $PYTHON_VERSIONS; \
         && /opt/python/${PYTHON_VER}/bin/python3 -m pip install ipykernel \
         && /opt/python/${PYTHON_VER}/bin/python3 -m ipykernel install --name py${PYTHON_VER} --display-name "Python ${PYTHON_VER}"; \
     done
+
+# Register an ipykernel for the two versions of Python that are included in the
+# upstream image.
+RUN for PYTHON_VER in "3.8.15" "3.9.14"; \
+    do \
+        /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade ipykernel \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m ipykernel install --name py${PYTHON_VER} --display-name "Python ${PYTHON_VER}"; \
+    done
+
+
 ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
 ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
