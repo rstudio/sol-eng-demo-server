@@ -1,283 +1,142 @@
-FROM ubuntu:bionic
+FROM rstudio/r-session-complete:jammy-2023.03.0--fa5bcba
+LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
-LABEL maintainer="sol-eng@rstudio.com"
+ARG DEBIAN_FRONTEND=noninteractive
 
-# Install RStudio Server Pro session components -------------------------------#
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
-    libcurl4-gnutls-dev \
-    libssl1.0.0 \
-    libssl-dev \
-    libuser \
-    libuser1-dev \
-    rrdtool \
-    wget
+# ------------------------------------------------------------------------------
+# Install system depdendenies requested by users
+# ------------------------------------------------------------------------------
+RUN apt-get update \
+    && apt-get install -y \
+        acl \
+        build-essential \
+        chromium-browser \
+        chromium-chromedriver \
+        gdebi-core \
+        ggobi \
+        llvm \
+        lmodern \
+        nodejs \
+        npm \
+        openjdk-8-jdk \
+        psmisc \
+        qpdf \
+        saint \
+        subversion \
+        texlive-latex-extra \
+        tree \
+        vim \
+        wget \
+        xz-utils \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install RStudio Server Pro (for session) --------------------------------------------------#
-ARG RSP_VERSION=2022.12.0-353.pro20
-ARG RSP_DOWNLOAD_URL=https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64
-RUN apt-get update --fix-missing \
-    && apt-get install -y gdebi-core \
-    && RSP_VERSION_URL=`echo -n "${RSP_VERSION}" | sed 's/+/-/g'` \
-    && curl -o rstudio-workbench.deb ${RSP_DOWNLOAD_URL}/rstudio-workbench-${RSP_VERSION_URL}-amd64.deb \
-    && gdebi --non-interactive rstudio-workbench.deb \
-    && rm rstudio-workbench.deb \
-    # && apt-get remove gdebi-core -y \
+# ------------------------------------------------------------------------------
+# Install additional versions of R
+# ------------------------------------------------------------------------------
+# rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
+# - R 4.1.3
+# - R 4.2.3
+ARG R_VERSIONS="3.6.3 4.0.5"
+ARG R_DEFAULT_VERSION="4.2.3"
+RUN for R_VER in $R_VERSIONS; \
+    do \
+        curl -O https://cdn.rstudio.com/r/ubuntu-2204/pkgs/r-${R_VER}_1_amd64.deb \
+        && gdebi -n r-${R_VER}_1_amd64.deb \
+        && rm -f ./r-${R_VER}_1_amd64.deb; \
+    done
+# Set the default version of R
+RUN ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/R /usr/local/bin/R \
+    && ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/Rscript /usr/local/bin/Rscript
+
+# ------------------------------------------------------------------------------
+# Install additional versions of Python
+# ------------------------------------------------------------------------------
+# rstudio/r-session-complete:jammy-2023.03.0--fa5bcba already includes:
+# - Python 3.8.15
+# - Python 3.9.14
+ARG PYTHON_VERSIONS="3.10.11 3.11.3"
+ARG PYTHON_DEFAULT_VERSION="3.10.11"
+RUN for PYTHON_VER in $PYTHON_VERSIONS; \
+    do \
+        curl -O https://cdn.rstudio.com/python/ubuntu-2204/pkgs/python-${PYTHON_VER}_1_amd64.deb \
+        && gdebi -n python-${PYTHON_VER}_1_amd64.deb \
+        && rm -rf python-${PYTHON_VER}_1_amd64.deb \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install ipykernel \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m ipykernel install --name py${PYTHON_VER} --display-name "Python ${PYTHON_VER}"; \
+    done
+
+# Register an ipykernel for the two versions of Python that are included in the
+# upstream image.
+RUN for PYTHON_VER in "3.8.15" "3.9.14"; \
+    do \
+        /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade pip wheel setuptools \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m pip install --upgrade ipykernel \
+        && /opt/python/${PYTHON_VER}/bin/python3 -m ipykernel install --name py${PYTHON_VER} --display-name "Python ${PYTHON_VER}"; \
+    done
+
+
+ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
+ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
+ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
+
+# ------------------------------------------------------------------------------
+# Quarto extras
+# ------------------------------------------------------------------------------
+# Install depdencies required to render a quarto doc to a pdf.
+RUN tlmgr install \
+  koma-script \
+  caption \
+  tcolorbox \
+  pgf \
+  pdfcol \
+  environ \
+  oberdiek \
+  tikzfill \
+  bookmark
+
+# ------------------------------------------------------------------------------
+# User requested tools
+# ------------------------------------------------------------------------------
+# Install the GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/lib/rstudio-server/r-versions
+    && git config --global credential.https://github.com.helper '!/usr/bin/gh auth git-credential' \
+    && git config --global credential.https://gist.github.com.helper '!/usr/bin/gh auth git-credential'
 
-EXPOSE 8788/tcp
+# git config --global user.name "Your Name"
 
-# Install additional system packages ------------------------------------------#
+# Install justfile
+RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg] https://proget.makedeb.org prebuilt-mpr $(lsb_release -cs)" | sudo tee /etc/apt/sources.list.d/prebuilt-mpr.list \
+    && apt-get update \
+    && apt-get install -y just \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    git \
-    libxml2-dev \
-    # these are other package system requirements, should uncomment and re-run
-    subversion \
-    lmodern \
-    bowtie2 \
-    bwidget \
-    cargo \
-    chromium-browser \
-    chromium-chromedriver \
-    cmake \
-    coinor-libclp-dev \
-    dcraw \
-    gdal-bin \
-    ggobi \
-    haveged \
-    imagej \
-    imagemagick \
-    jags \
-    libapparmor-dev \
-    libatk1.0-dev \
-    libavfilter-dev \
-    libcairo2-dev \
-    #libcurl4-openssl-dev \
-    libfftw3-dev \
-    libfreetype6-dev \
-    libgdal-dev \
-    libgeos-dev \
-    libgit2-dev \
-    libgl1-mesa-dev \
-    libglib2.0-dev \
-    libglpk-dev \
-    libglu1-mesa-dev \
-    libgmp3-dev \
-    libgpgme11-dev \
-    libgsl0-dev \
-    libgtk2.0-dev \
-    libhdf5-dev \
-    libhiredis-dev \
-    libicu-dev \
-    libimage-exiftool-perl \
-    libjpeg-dev \
-    libjq-dev \
-    libleptonica-dev \
-    libmagic-dev \
-    libmagick++-dev \
-    libmpfr-dev \
-    libmysqlclient-dev \
-    libnetcdf-dev \
-    libopenmpi-dev \
-    libpango1.0-dev \
-    libpng-dev \
-    libpoppler-cpp-dev \
-    libpq-dev \
-    libproj-dev \
-    libprotobuf-dev \
-    libqgis-dev \
-    libraptor2-dev \
-    librasqal3-dev \
-    librdf0-dev \
-    librrd-dev \
-    librsvg2-dev \
-    libsasl2-dev \
-    libsecret-1-dev \
-    libsndfile1-dev \
-    libsodium-dev \
-    libssh2-1-dev \
-    libssl-dev \
-    libtesseract-dev \
-    libtiff-dev \
-    libudunits2-dev \
-    libv8-dev \
-    libwebp-dev \
-    libxft-dev \
-    libxml2-dev \
-    libxslt-dev \
-    libzmq3-dev \
-    make \
-    nvidia-cuda-dev \
-    ocl-icd-opencl-dev \
-    openjdk-8-jdk \
-    pari-gp \
-    perl \
-    protobuf-compiler \
-    rustc \
-    saga \
-    saint \
-    swftools \
-    tcl \
-    tesseract-ocr-eng \
-    texlive \
-    texlive-latex-extra \
-    tk \
-    tk-table \
-    unixodbc-dev \
-    wget \
-    zlib1g-dev  \
-    libfontconfig1-dev \
-    # other dev dependencies
-    vim \
-    psmisc \
-    qpdf \
-    tree \
-    # pyenv dependencies
-    make \
-    build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    wget \
-    curl \
-    llvm \
-    libncursesw5-dev \
-    xz-utils \
-    tk-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    libffi-dev \
-    liblzma-dev
+# Install the AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm awscliv2.zip
 
-
-# Install Arrow Sysdeps (Instructions here: https://arrow.apache.org/install/)
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     apt-transport-https \
-#     gnupg \
-#     lsb-release
-
-# RUN wget -O /usr/share/keyrings/apache-arrow-keyring.gpg https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-keyring.gpg
-# # RUN tee /etc/apt/sources.list.d/apache-arrow.list <<APT_LINE \
-# #     deb [arch=amd64 signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     deb-src [signed-by=/usr/share/keyrings/apache-arrow-keyring.gpg] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main \
-# #     APT_LINE
-
-
-# RUN apt-get update -y && \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#     libarrow-dev \
-#     libarrow-glib-dev \
-#     libarrow-flight-dev \
-#     libplasma-dev \
-#     libplasma-glib-dev \
-#     libgandiva-dev \
-#     libgandiva-glib-dev \
-#     libparquet-dev \
-#     libparquet-glib-dev
-
-
-# Link Quarto -------------------------------------------------------------------#
-RUN ln -s /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin/quarto
-
-# Install R -------------------------------------------------------------------#
-
-ARG R_VERSION=3.6.1
-RUN curl -O https://cdn.rstudio.com/r/ubuntu-1804/pkgs/r-${R_VERSION}_1_amd64.deb && \
-    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive r-${R_VERSION}_1_amd64.deb && \
-    rm -f ./r-${R_VERSION}_1_amd64.deb
-
-RUN ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R && \
-    ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
-
-# Install R packages ----------------------------------------------------------#
-
-RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 /opt/R/${R_VERSION}/bin/R CMD javareconf
-
-#COPY ./pkg_names.csv /opt/R/${R_VERSION}/lib/pkg_names.csv
-#COPY ./pkg_installer.R /opt/R/${R_VERSION}/lib/pkg_installer.R
-
-ARG R_REPO='https://colorado.rstudio.com/rspm/cran/__linux__/bionic/latest'
-ARG R_REPO_LATEST='https://colorado.rstudio.com/rspm/cran/__linux__/bionic/latest'
-RUN echo "options(\"repos\" = c(RSPM = \"${R_REPO}\"), \"HTTPUserAgent\" = \"R/${R_VERSION} R (${R_VERSION} x86_64-pc-linux-gnu x86_64-pc-linux-gnu x86_64-pc-linux-gnu)\");" >> \
-	/opt/R/${R_VERSION}/lib/R/etc/Rprofile.site
-
-# need to install packages from list of packages...
-#RUN /opt/R/${R_VERSION}/bin/R -e "source(\"/opt/R/${R_VERSION}/lib/pkg_installer.R\"); docker_pkg_install(\"/opt/R/${R_VERSION}/lib/pkg_names.csv\", \"/opt/R/${R_VERSION}/lib/R/library\")"
-
-# Install jupyter -------------------------------------------------------------#
-
-ARG JUPYTER_VERSION=3.9.6
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -bp /opt/python/jupyter && \
-    /opt/python/jupyter/bin/conda install -y python==${JUPYTER_VERSION} && \
-    rm -rf Miniconda3-latest-Linux-x86_64.sh && \
-    /opt/python/jupyter/bin/pip install \
-    jupyter \
-    jupyterlab \
-    rsp_jupyter \
-    rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter kernelspec remove python3 -f && \
-    /opt/python/jupyter/bin/pip uninstall -y ipykernel
-
-# Install RSP/RSC Notebook Extensions --------------------#
-
-RUN /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsp_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension install --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-nbextension enable --sys-prefix --py rsconnect_jupyter && \
-    /opt/python/jupyter/bin/jupyter-serverextension enable --sys-prefix --py rsconnect_jupyter
-
-# Install Python --------------------------------------------------------------#
-
-ARG PYTHON_VERSION=3.7.3
-RUN curl -O https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
-    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -bp /opt/python/${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/conda install -y python==${PYTHON_VERSION} && \
-    /opt/python/${PYTHON_VERSION}/bin/pip install virtualenv jupyter && \
-    rm -rf Miniconda3-*-Linux-x86_64.sh && \
-    /opt/python/${PYTHON_VERSION}/bin/python -m ipykernel install --name py${PYTHON_VERSION} --display-name "Python ${PYTHON_VERSION}"
-
-ENV PATH="~/.local/bin:/opt/python/${PYTHON_VERSION}/bin:${PATH}"
+# ------------------------------------------------------------------------------
+# Set environment variables
+# ------------------------------------------------------------------------------
 ENV SHELL="/bin/bash"
-ENV RETICULATE_PYTHON="/opt/python/${PYTHON_VERSION}/bin/python"
 
-# Install RStudio Professional Drivers ----------------------------------------#
-
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc unixodbc-dev gdebi-core
-
-ARG DRIVERS_VERSION=2022.11.0
-RUN curl -O https://cdn.rstudio.com/drivers/7C152C12/installer/rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
-    DEBIAN_FRONTEND=noninteractive gdebi --non-interactive rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
-    rm rstudio-drivers_${DRIVERS_VERSION}_amd64.deb && \
-    cat /opt/rstudio-drivers/odbcinst.ini.sample | tee /etc/odbcinst.ini
-
-# Install Instant Client for Oracle Driver
-RUN curl -O https://download.oracle.com/otn_software/linux/instantclient/191000/instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip && \
-    unzip instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip -d /opt/oracle && \
-    ln -s /opt/oracle/instantclient_19_10/* /opt/rstudio-drivers/oracle/bin/lib/ && \
-    rm instantclient-basiclite-linux.x64-19.10.0.0.0dbru.zip
-
-# install latest versions of important IDE packages
-RUN /opt/R/${R_VERSION}/bin/R -e "install.packages(c(\"odbc\", \"rsconnect\", \"rstudioapi\"), repos=\"${R_REPO_LATEST}\")"
-
-# Locale configuration --------------------------------------------------------#
-
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y locales locales-all
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV TZ UTC
-ENV R_BUILD_TAR /bin/tar
+# ------------------------------------------------------------------------------
+# Workbench port
+# ------------------------------------------------------------------------------
+EXPOSE 8788/tcp

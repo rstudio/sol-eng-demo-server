@@ -1,47 +1,55 @@
-set positional-arguments
+# This justfile provides common commands for building and testing the images
+# locally. It is NOT part of the CI/CD pipeline. The CI/CD pipeline is driven by
+# the Jenkinsfile.
 
-cmd_vars := "-i ''"
-sed_vars := if os() == "macos" { "-i ''" } else { "-i" }
+# Define the all of shared parameters
+tag := "pwb-session"
 
-BUILDX_PATH := ""
+# List all of the just recipes
+default:
+    just --list
 
-RSW_VERSION := "2022.12.0-353.pro20"
+# Build the docker image
+build:
+    docker build \
+        --build-arg R_VERSIONS='4.0.5' \
+        --build-arg R_DEFAULT_VERSION='4.2.3' \
+        --build-arg PYTHON_VERSIONS='3.10.11' \
+        --build-arg PYTHON_DEFAULT_VERSION='3.10.11' \
+        --platform "linux/amd64" \
+        --tag {{tag}} \
+        .
 
-# just RSW_VERSION=1.2.3 update-rsw-versions
-update-versions:
-  #!/usr/bin/env bash
-  set -euxo pipefail
-  if [[ `echo "{{ RSW_VERSION }}" | grep '+'` ]]; then
-    echo "ERROR: Make sure that there is no '+' sign in the version you define. Got: {{ RSW_VERSION }}"
-    exit 1
-  fi
-    sed {{ sed_vars }} "s/^.*/{{ RSW_VERSION }}/g" rsp-version.txt
-    sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" Dockerfile
-    sed {{ sed_vars }} "s/^ARG RSP_VERSION=.*/ARG RSP_VERSION={{ RSW_VERSION }}/g" multi.Dockerfile
-
-# just vars
-vars:
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    echo "packages:" > goss_vars.yaml && \
-    cat pkg_names.csv | tail -n +2 | grep -v -f pkg_failing.txt | sort | uniq | sed -E 's/(^.*)/  - "\1"/g' >> goss_vars.yaml
-
-# just test
+# Run the docker image with the bash process. Helpful for debugging.
+run:
+    docker run -it --rm --platform "linux/amd64" {{tag}} /bin/bash
+ 
+# Run all tests
 test:
-    GOSS_VARS=goss_vars.yaml dgoss run -it -e R_VERSION=3.6.1 075258722956.dkr.ecr.us-east-1.amazonaws.com/sol-eng-demo-server:1.2.5019-6-3.6
+    just test-aws-cli
+    just test-install-r-popular
+    just test-install-r-complete
 
-# just edit
-edit:
-    GOSS_VARS=goss_vars.yaml dgoss edit -it -e R_VERSION=3.6.1 075258722956.dkr.ecr.us-east-1.amazonaws.com/sol-eng-demo-server:1.2.5019-6-3.6
+# Test the most popular R packages are installable (2 min +)
+test-install-r-popular:
+    docker run -it --rm \
+        --volume $(pwd)/tests:/tests \
+        --workdir /tests \
+        {{tag}} \
+        /opt/R/4.2.3/bin/Rscript install_r_packages_popular.R
+    
+# Test that a comprehsive list of R packages are installable (30 min +)
+test-install-r-complete:
+    docker run -it --rm \
+        --volume $(pwd)/tests:/tests \
+        --workdir /tests \
+        {{tag}} \
+        /opt/R/4.2.3/bin/Rscript install_r_packages_complete.R
 
-# just build-apache
-build-apache:
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    docker build ./helper/apache-proxy/
-
-# just build-%
-build-all:
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    docker build -t rstudio-test/$* ./helper/$*/
+# Test that the AWS CLI is callable
+test-aws-cli:
+    docker run -it --rm \
+        --volume $(pwd)/tests:/tests \
+        --workdir /tests \
+        {{tag}} \
+        'aws --help'
