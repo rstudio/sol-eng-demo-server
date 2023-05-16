@@ -53,3 +53,4 @@ test-aws-cli:
         --workdir /tests \
         {{tag}} \
         'aws --help'
+        
