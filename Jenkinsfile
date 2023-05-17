@@ -21,7 +21,7 @@ def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def def
 
     node('docker') {
         checkout scm
-        def imageName = 'pwb-session'
+        def imageName = 'sol-eng-demo-server'
         def now = new Date().format("yyyyMMdd", TimeZone.getTimeZone('UTC'))
         def finalTag = tag + "-" + now
 
