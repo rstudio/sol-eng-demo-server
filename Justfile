@@ -3,7 +3,7 @@
 # the Jenkinsfile.
 
 # Define the all of shared parameters
-tag := "pwb-session"
+tag := "sol-eng-demo-server"
 
 # List all of the just recipes
 default:
