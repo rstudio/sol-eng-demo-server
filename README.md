@@ -2,13 +2,9 @@
 
 This repository contains Workbench session images deployed to the Solutions Engineering Demo server (lovingly known as "Colorado").
 
-## Disclaimers
+## Description
 
-These images are stored in AWS ECR; they are _not_ accessible on DockerHub.
-
-We love open source!! However, these resources have a narrow vision for a specific environment. Posit uses these images for our Posit Workbench demo environment ("Colorado"). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
-
-## Description of Image
+Posit uses these images for our [Posit Workbench demo environment ("Colorado")](https://colorado.posit.co). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
 
 The sol-eng-demo-server images are built from [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based on `rstudio/r-session-complete:jammy-2023.03.0--fa5bcba`. The `r-session-complete` includes most of the components we need for our Workbench sessions, including:
 
@@ -21,6 +17,8 @@ The sol-eng-demo-server images are built from [r-session-complete](https://githu
 - Python version 3.9.14
 
 The base `r-session-complete` is extended by adding additional R and Python versions and system dependencies requested by Colorado users. See the [Dockerfile](./Dockerfile) for more details.
+
+These images are stored in AWS ECR; they are not accessible on DockerHub.
 
 ## Dev Workflow
 
