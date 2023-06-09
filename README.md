@@ -6,7 +6,7 @@ This repository contains Workbench session images deployed to the Solutions Engi
 
 Posit uses these images for our [Posit Workbench demo environment ("Colorado")](https://colorado.posit.co). This image builds off of the [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete) image. It serves as a great example to get started with building your own Posit Workbench session images.
 
-The sol-eng-demo-server images are built from [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based on `rstudio/r-session-complete:jammy-2023.03.0--fa5bcba`. The `r-session-complete` includes most of the components we need for our Workbench sessions, including:
+The sol-eng-demo-server images are built from [r-session-complete](https://github.com/rstudio/rstudio-docker-products/tree/dev/r-session-complete). Specifically, the image is based on `rstudio/r-session-complete:jammy-2023.03.1`. The `r-session-complete` includes most of the components we need for our Workbench sessions, including:
 
 - Workbench session components
 - System dependencies required to build and install most R packages
