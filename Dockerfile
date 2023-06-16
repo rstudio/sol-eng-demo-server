@@ -115,7 +115,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 ARG GIT_CREDENTIAL_OAUTH_VERSION=0.8.0
 # Install git oauth
 RUN curl --location -o  gitcreds.tar.gz  https://github.com/hickford/git-credential-oauth/releases/download/v${GIT_CREDENTIAL_OAUTH_VERSION}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_linux_amd64.tar.gz \
-	&& tar xzvf gitcreds.tar.gz -C /usr/bin --strip-components=1 \
+	&& tar xzvf gitcreds.tar.gz -C /usr/local/bin \
 	&& rm gitcreds.tar.gz \
     && git credential-oauth configure
 
