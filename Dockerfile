@@ -110,11 +110,15 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get install -y gh \
     && apt-get autoremove -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && git config --global credential.https://github.com.helper '!/usr/bin/gh auth git-credential' \
-    && git config --global credential.https://gist.github.com.helper '!/usr/bin/gh auth git-credential'
+    && rm -rf /var/lib/apt/lists/* 
 
-# git config --global user.name "Your Name"
+ARG GIT_CREDENTIAL_OAUTH_VERSION=0.8.0
+# Install git oauth
+RUN curl --location -o  gitcreds.tar.gz  https://github.com/hickford/git-credential-oauth/releases/download/v${GIT_CREDENTIAL_OAUTH_VERSION}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_linux_amd64.tar.gz \
+	&& tar xzvf gitcreds.tar.gz -C /usr/local/bin \
+	&& rm gitcreds.tar.gz \
+    && git credential-oauth configure
+
 
 # Install justfile
 RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null \
