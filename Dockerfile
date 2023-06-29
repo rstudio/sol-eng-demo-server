@@ -1,4 +1,4 @@
-FROM rstudio/r-session-complete:jammy-2023.03.1
+FROM rstudio/r-session-complete:jammy-2023.06.0
 LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -37,9 +37,7 @@ RUN apt-get update \
 # ------------------------------------------------------------------------------
 # Install additional versions of R
 # ------------------------------------------------------------------------------
-# rstudio/r-session-complete:jammy-2023.03.1 already includes:
-# - R 4.1.3
-# - R 4.2.3
+
 ARG R_VERSIONS="3.6.3 4.0.5"
 ARG R_DEFAULT_VERSION="4.2.3"
 RUN for R_VER in $R_VERSIONS; \
@@ -55,9 +53,7 @@ RUN ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/R /usr/local/bin/R \
 # ------------------------------------------------------------------------------
 # Install additional versions of Python
 # ------------------------------------------------------------------------------
-# rstudio/r-session-complete:jammy-2023.03.1 already includes:
-# - Python 3.8.15
-# - Python 3.9.14
+
 ARG PYTHON_VERSIONS="3.10.11 3.11.3"
 ARG PYTHON_DEFAULT_VERSION="3.10.11"
 RUN for PYTHON_VER in $PYTHON_VERSIONS; \
