@@ -51,11 +51,11 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel '2023.03.1-old-r-and-python': {
+        parallel '2023.06.1-old-r-and-python': {
             def image = buildImage("2023.03.1-past-r-and-python", "3.5.3 3.6.3", "4.2.3", "3.7.16", "3.9.14", false)
             print "Finished 2023.03.1-old-r-and-python"
         },
-        '2023.03.1-default': {
+        '2023.06.1-default': {
             def image = buildImage("2023.03.1-default", "4.0.5", "4.2.3", "3.10.11", "3.10.11", true)
             print "Finished 2023.03.1-default"
         }

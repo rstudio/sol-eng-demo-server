@@ -1,4 +1,4 @@
-FROM rstudio/r-session-complete:jammy-2023.03.1
+FROM rstudio/r-session-complete:jammy-2023.06.0
 LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -37,9 +37,7 @@ RUN apt-get update \
 # ------------------------------------------------------------------------------
 # Install additional versions of R
 # ------------------------------------------------------------------------------
-# rstudio/r-session-complete:jammy-2023.03.1 already includes:
-# - R 4.1.3
-# - R 4.2.3
+
 ARG R_VERSIONS="3.6.3 4.0.5"
 ARG R_DEFAULT_VERSION="4.2.3"
 RUN for R_VER in $R_VERSIONS; \
@@ -55,9 +53,7 @@ RUN ln -sf /opt/R/${R_DEFAULT_VERSION}/bin/R /usr/local/bin/R \
 # ------------------------------------------------------------------------------
 # Install additional versions of Python
 # ------------------------------------------------------------------------------
-# rstudio/r-session-complete:jammy-2023.03.1 already includes:
-# - Python 3.8.15
-# - Python 3.9.14
+
 ARG PYTHON_VERSIONS="3.10.11 3.11.3"
 ARG PYTHON_DEFAULT_VERSION="3.10.11"
 RUN for PYTHON_VER in $PYTHON_VERSIONS; \
@@ -83,6 +79,7 @@ RUN for PYTHON_VER in "3.8.15" "3.9.14"; \
 ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
 ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
+ENV TZ="UTC"
 
 # ------------------------------------------------------------------------------
 # Quarto extras
@@ -121,13 +118,11 @@ RUN curl --location -o  gitcreds.tar.gz  https://github.com/hickford/git-credent
 
 
 # Install justfile
-RUN wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg] https://proget.makedeb.org prebuilt-mpr $(lsb_release -cs)" | sudo tee /etc/apt/sources.list.d/prebuilt-mpr.list \
-    && apt-get update \
-    && apt-get install -y just \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN mkdir /tmp/just \
+    && curl -L -o /tmp/just/just-1.14.0-x86_64-unknown-linux-musl.tar.gz https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz \
+    && tar -xzvf /tmp/just/just-1.14.0-x86_64-unknown-linux-musl.tar.gz -C /tmp/just \
+    && cp /tmp/just/just /usr/local/bin \
+    && rm -rf /tmp/just
 
 # Install the AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
