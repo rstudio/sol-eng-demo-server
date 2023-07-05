@@ -79,6 +79,7 @@ RUN for PYTHON_VER in "3.8.15" "3.9.14"; \
 ENV PATH="/opt/python/${PYTHON_DEFAULT_VERSION}/bin:${PATH}"
 ENV RETICULATE_PYTHON="/opt/python/${PYTHON_DEFAULT_VERSION}/bin/python"
 ENV WORKBENCH_JUPYTER_PATH=/usr/local/bin/jupyter
+ENV TZ="UTC"
 
 # ------------------------------------------------------------------------------
 # Quarto extras
