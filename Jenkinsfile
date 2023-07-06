@@ -11,7 +11,7 @@
 pushImage = (env.BRANCH_NAME == 'main')
 
 // buildImage hides most of the pullBuildPush details from callers.
-def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def defaultPython, def latest) {
+def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def defaultPython) {
     
     // Note that the image will have additional versions of R and Python installed
     // other than those defined in rVersions and pythonVersions. See the README
@@ -30,7 +30,6 @@ def buildImage(def tag, def rVersions, def defaultR, def pythonVersions, def def
             image_tag: finalTag,
             // can use this to invalidate the cache if needed
             // cache_tag: 'none',
-            latest_tag: latest,
             dockerfile: 'Dockerfile',
             build_args: "--build-arg R_VERSIONS='${rVersions}' --build-arg R_DEFAULT_VERSION=${defaultR} --build-arg PYTHON_VERSIONS='${pythonVersions}' --build-arg PYTHON_DEFAULT_VERSION=${defaultPython}",
             build_arg_jenkins_uid: 'JENKINS_UID',
@@ -51,12 +50,12 @@ ansiColor('xterm') {
         }
     }
     stage('build') {
-        parallel '2023.06.1-old-r-and-python': {
-            def image = buildImage("2023.03.1-past-r-and-python", "3.5.3 3.6.3", "4.2.3", "3.7.16", "3.9.14", false)
+        parallel '2023.06.0-old-r-and-python': {
+            def image = buildImage("2023.06.0-past-r-and-python", "3.5.3 3.6.3", "4.2.3", "3.7.16", "3.9.14")
             print "Finished 2023.03.1-old-r-and-python"
         },
-        '2023.06.1-default': {
-            def image = buildImage("2023.03.1-default", "4.0.5", "4.2.3", "3.10.11", "3.10.11", true)
+        '2023.06.0-default': {
+            def image = buildImage("2023.06.0-default", "4.0.5", "4.2.3", "3.10.11", "3.10.11")
             print "Finished 2023.03.1-default"
         }
     }
