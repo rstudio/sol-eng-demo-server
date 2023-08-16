@@ -1,4 +1,4 @@
-FROM rstudio/r-session-complete:jammy-2023.06.0
+FROM rstudio/r-session-complete:jammy-2023.06.1
 LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
