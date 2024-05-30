@@ -1,4 +1,4 @@
-FROM rstudio/r-session-complete:jammy-2023.12.1
+FROM rstudio/r-session-complete:jammy-2024.04.0
 LABEL maintainer="RStudio Docker <docker@rstudio.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -38,7 +38,7 @@ RUN apt-get update \
 # Install additional versions of R
 # ------------------------------------------------------------------------------
 
-ARG R_VERSIONS="3.6.3 4.0.5 4.2.3 4.3.3"
+ARG R_VERSIONS="3.6.3 4.0.5 4.2.3 4.3.3 4.4.0"
 ARG R_DEFAULT_VERSION="4.3.3"
 RUN for R_VER in $R_VERSIONS; \
     do \
